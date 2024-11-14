@@ -1,4 +1,4 @@
-# chiffrement3000
+# Chiffrement3000
 Code pour algo de chiffrement du projet tuteuré
 
 Par **PRESLE-JONC Thibault** et **WANG Alex**
