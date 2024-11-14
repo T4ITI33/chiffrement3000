@@ -9,7 +9,7 @@ Ce projet s'incrit dans le cadre de notre cours projet tuteuré. Nous avons pour
 
 
 ## Sujet:
-Développer algo de chiffrement de chiffrement symétrique(AES) et le tester.
+Développer un algo de chiffrement symétrique(AES) et le tester.
 Possiblement ajouter signature électronique et stéganographie.
 
 ## Objectif final idéal:
@@ -34,16 +34,21 @@ Le chiffrement AES fonctionne en bloc de 16 octets, ce qui veut dire que texte e
 
 ### 1.AddRoundKey
 
-On ajoute la **RoundKey** (la clé du tour actuel) au texte.
+On ajoute la **RoundKey** (la clé du tour actuel) à chaque octets .
 
 ### 2.SubBytes
 
-Chaque octets est remplacé par un autre en utilisant la S-Box.
+Chaque octets est remplacé par un autre en utilisant la S-Box et le champ de Galois
+S-Box est une matrice prédéfinie remplie de caractère.
 
 ### 3.ShiftRows
 
 Les lignes sont décalés vers la gauche.
+* La première ligne ne bouge pas.
+* La deuxième ligne est décalée d'un octet vers la gauche.
+* La troisième ligne est décalée de deux octets vers la gauche.
+* La quatrième ligne est décalée de trois octets vers la gauche.
 
 ### 4.MixCollums
 
-Les colonnes sont transformées pour mélanger les octets.
+Les colonnes sont transformées en les multipliant par une matrice fixe dans le domaine de Galois.
