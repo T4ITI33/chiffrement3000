@@ -15,7 +15,11 @@ Possiblement ajouter signature électronique et stéganographie.
 ## Objectif final idéal:
 Envoyer un message chiffré, signé électroniquement et caché.
 
+## A faire
 
+* se renseigner sur le fonctionnement de AES
+* détaillé chaque étapes
+* définir des fonctions à chaque étapes pour faciliter le développement
 
 ## Fonctionnement du ciffreùent AES
 
