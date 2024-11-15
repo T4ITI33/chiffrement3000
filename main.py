@@ -18,10 +18,6 @@ def decoupe_en_blocs(phrase, taille_bloc=16):
 def text_en_hex(text):
     return ''.join(format(ord(char), '02X') for char in text)
 
-# texte = "hello"
-# resultat = text_to_hex(texte)
-# print(resultat)
-
 
 
 #cette fonction transforme l'hexadécimalen binaire.
