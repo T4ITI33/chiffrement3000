@@ -1,8 +1,9 @@
-```#les 4 fonctions principales
-    fonction AddRoundKey():
-    fonction SubBytes():
-    fonction ShiftRows():
-    fonction MixColumns():
+```
+#les 4 fonctions principales
+fonction AddRoundKey():
+fonction SubBytes():
+fonction ShiftRows():
+fonction MixColumns():
 
 
 #cette fonction découpe le message en bloc de 16 octets. Si le message est plus court ou si le dernier bloc fait moins de 16 octets, on remplace ce qu'il manque par des epaces, 20 en hexadécimal.
