@@ -1,4 +1,4 @@
-#les 4 fonctions principales
+```#les 4 fonctions principales
     fonction AddRoundKey():
     fonction SubBytes():
     fonction ShiftRows():
@@ -13,6 +13,12 @@ fonction text_en_hexa():
 
 #cette conftion transforme l'hexadécimalen binaire.
 fonction hexa_en_bin():
+
+#cette fonction transforme le binaire en hexadécimal.
+fonction bin_en_hexa():
+
+#cette fonction applique l'opération xor en 2 ou 3 éléments
+fonction xor():
 
 
 #fonction de chiffrement
@@ -36,3 +42,4 @@ fonction chiffrement(texte_en_clair, clé):
 
 #fonction de déchiffrement
 fonction déchiffrement(text_chiffré, clé):
+```

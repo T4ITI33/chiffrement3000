@@ -47,6 +47,8 @@ On ajoute la **RoundKey** (la clé du tour actuel) à chaque octets .
 
 Chaque octets est remplacé par un autre en utilisant la S-Box. 
 Pour faire ce rémplacement, on regarde dans le tableau. X correspond au premier charactère exadécimal et Y le deuxième.
+
+
 ![SBox](image.png)
 
 ### 3.ShiftRows
