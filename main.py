@@ -5,32 +5,45 @@ def ShiftRows():
 def MixColumns():
 
 
-#cette fonction découpe le message en bloc de 16 octets. Si le message est plus court ou si le dernier bloc fait moins de 16 octets, on remplace ce qu'il manque par des epaces, 20 en hexadécimal.
-def decoupe_en_blocs(text, taille_bloc=16):
-    # Découper la phrase en blocs de taille_bloc
-    blocs = [text[i:i+taille_bloc] for i in range(0, len(text), taille_bloc)]
-    # Compléter le dernier bloc avec des espaces si nécessaire
-    if len(blocs[-1]) < taille_bloc:
-        blocs[-1] = blocs[-1].ljust(taille_bloc)
-    return blocs
+#cette fonction découpe le message en matrice de taille 4x4. Chaque case correspond à un caractère. Si il manque des caractère dans la derniere matrice on ajoute des espace. 20 en hexadécimal
+#la fonction retourne une liste de matrices
+def decoupe_en_matrices(phrase, taille_bloc=16):
+    # Étape 1 : Compléter le texte pour qu'il soit un multiple de 16
+    if len(phrase) % taille_bloc != 0:
+        phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
+    
+    # Étape 2 : Découper la phrase en blocs de 16 caractères
+    blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
+    
+    # Étape 3 : Convertir chaque bloc en une matrice 4x4
+    matrices = []
+    for bloc in blocs:
+        matrice = [[bloc[i + j*4] for i in range(4)] for j in range(4)]
+        matrices.append(matrice)
+    
+    return matrices
 
-#cette fonction transforme le texte en hexadécimal.
+
+
+#cette fonction transforme chaque caractere d'une matrice en hexadécimal.
 def text_en_hex(text):
-    return ''.join(format(ord(char), '02X') for char in text)
+    hex_matrix = [[format(ord(char), '02x') for char in row] for row in text]
+    return hex_matrix
 
 
-#cette fonction transforme l'hexadécimalen binaire.
-def hexa_en_bin(chiffre):
-    binaire=""
-    while chiffre!=0:
-        binaire=str(chiffre%2)+binaire
-        chiffre=chiffre//2
-    while len(binaire)<8:
-        binaire="0"+binaire
-    return binaire
 
-#cette fonction transforme le binaire en hexadécimal.
-def bin_en_hexa():
+
+#cette fonction transforme chaque hexadécimal d'une matrice en binaire.
+def hex_matrix_to_binary(hex_matrix):
+    binary_matrix = [[format(int(hex_code, 16), '08b') for hex_code in row] for row in hex_matrix]
+    return binary_matrix
+
+
+
+#cette fonction transforme chaque binaire d'une matrice en hexadécimal.
+def binary_matrix_to_hex(binary_matrix):
+    hex_matrix = [[format(int(binary_code, 2), '02x') for binary_code in row] for row in binary_matrix]
+    return hex_matrix
 
 #cette fonction applique l'opération xor en 2 ou 3 éléments
 def xor(phrase,cle_secret):
