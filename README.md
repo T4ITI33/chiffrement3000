@@ -21,7 +21,7 @@ Envoyer un message chiffré, signé électroniquement et caché.
 * détaillé chaque étapes
 * définir des fonctions à chaque étapes pour faciliter le développement
 
-## Fonctionnement du ciffreùent AES
+## Fonctionnement du ciffrement AES
 
 `https://www.formaestudio.com/rijndaelinspector/archivos/Rijndael_Animation_v4_eng.zip` animation qui explique le fonctionnement du chiffrement AES.
 `https://www.youtube.com/watch?v=pSCoquEJsIo` vidéo qui explique le chiffrement avec l'animation.
@@ -45,8 +45,9 @@ On ajoute la **RoundKey** (la clé du tour actuel) à chaque octets .
 
 ### 2.SubBytes
 
-Chaque octets est remplacé par un autre en utilisant la S-Box et le champ de Galois
-S-Box est une matrice prédéfinie remplie de caractère.
+Chaque octets est remplacé par un autre en utilisant la S-Box. 
+Pour faire ce rémplacement, on regarde dans le tableau. X correspond au premier charactère exadécimal et Y le deuxième.
+![SBox](image.png)
 
 ### 3.ShiftRows
 
