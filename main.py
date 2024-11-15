@@ -63,13 +63,6 @@ def xor(phrase,cle_secret):
 #fonction de chiffrement
 def chiffrement(texte_en_clair, clé):
 
-    phrase="Voici un exemple de texte à chiffrer."
-    phrase_decoupe = decoupe_en_blocs(phrase)
-    print(phrase_decoupe)
-    for i in phrase_decoupe:
-        resultat = text_en_hex(i)
-        print(resultat)
-
 
     
     def taille_clé():
