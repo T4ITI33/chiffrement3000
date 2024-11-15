@@ -1,0 +1,29 @@
+#les 4 fonctions principales
+    fonction AddRoundKey():
+    fonction SubBytes():
+    fonction ShiftRows():
+    fonction MixColumns():
+
+
+
+#fonction de chiffrement
+fonction chiffrement(texte_en_clair, clé):
+    
+    fonction taille_clé():
+
+    AddRoundKey(clé):
+
+    #x dépend de la taille de la clé
+    for x tours:
+        SubBytes():
+        ShiftRows():
+        MixColumns():
+        AddRoundKey(RoundKey):
+    fin for
+
+    SubBytes():
+    ShiftRows():
+    AddRoundKey(LastRoundKey):
+
+#fonction de déchiffrement
+fonction déchiffrement(text_chiffré, clé):
