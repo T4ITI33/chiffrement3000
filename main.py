@@ -21,14 +21,44 @@ def text_en_hex(text):
 
 
 #cette fonction transforme l'hexadécimalen binaire.
-def hexa_en_bin():
+def hexa_en_bin(chiffre):
+    binaire=""
+    while chiffre!=0:
+        binaire=str(chiffre%2)+binaire
+        chiffre=chiffre//2
+    while len(binaire)<8:
+        binaire="0"+binaire
+    return binaire
 
 #cette fonction transforme le binaire en hexadécimal.
 def bin_en_hexa():
 
 #cette fonction applique l'opération xor en 2 ou 3 éléments
-def xor():
-
+def xor(phrase,cle_secret):
+    texte1=texte_en_bin(phrase)
+    texte2=texte_en_bin(cle_secret)
+    combine=""
+    if len(texte1)>len(texte2):       
+        for bit in range(len(texte2)):
+            if texte1[bit]==texte2[bit]:
+                combine=combine+"0"
+            else:
+                combine=combine+"1"
+        return combine+texte1[len(texte2):]
+    elif len(texte2)>len(texte1):
+        for bit in range(len(texte1)):
+            if texte1[bit]==texte2[bit]:
+                combine=combine+"0"
+            else:
+                combine=combine+"1"
+        return combine+texte2[len(texte1):]
+    for bit in range(len(texte1)):
+        print(texte1[bit],texte2[bit])
+        if texte1[bit]==texte2[bit]:
+            combine=combine+"0"
+        else:
+            combine=combine+"1"
+    return combine
 
 #fonction de chiffrement
 def chiffrement(texte_en_clair, clé):
