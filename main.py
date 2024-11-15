@@ -6,9 +6,9 @@ def MixColumns():
 
 
 #cette fonction découpe le message en bloc de 16 octets. Si le message est plus court ou si le dernier bloc fait moins de 16 octets, on remplace ce qu'il manque par des epaces, 20 en hexadécimal.
-def decoupe_en_blocs(phrase, taille_bloc=16):
+def decoupe_en_blocs(text, taille_bloc=16):
     # Découper la phrase en blocs de taille_bloc
-    blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
+    blocs = [text[i:i+taille_bloc] for i in range(0, len(text), taille_bloc)]
     # Compléter le dernier bloc avec des espaces si nécessaire
     if len(blocs[-1]) < taille_bloc:
         blocs[-1] = blocs[-1].ljust(taille_bloc)
@@ -18,7 +18,8 @@ def decoupe_en_blocs(phrase, taille_bloc=16):
 def text_en_hex(text):
     return ''.join(format(ord(char), '02X') for char in text)
 
-
+def hex_en_matrice(hex):
+    
 
 #cette fonction transforme l'hexadécimalen binaire.
 def hexa_en_bin(chiffre):
