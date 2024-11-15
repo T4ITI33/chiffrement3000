@@ -18,8 +18,6 @@ def decoupe_en_blocs(text, taille_bloc=16):
 def text_en_hex(text):
     return ''.join(format(ord(char), '02X') for char in text)
 
-def hex_en_matrice(hex):
-    
 
 #cette fonction transforme l'hexadécimalen binaire.
 def hexa_en_bin(chiffre):
