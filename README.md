@@ -23,6 +23,9 @@ Envoyer un message chiffré, signé électroniquement et caché.
 
 ## Fonctionnement du ciffreùent AES
 
+`https://www.formaestudio.com/rijndaelinspector/archivos/Rijndael_Animation_v4_eng.zip` animation qui explique le fonctionnement du chiffrement AES.
+`https://www.youtube.com/watch?v=pSCoquEJsIo` vidéo qui explique le chiffrement avec l'animation.
+
 Le chiffrement AES s'eefectue en plusieur tours. Ces tours sont déterminés par la taille de la clé de ciffrement.
 * 128 bit : 10 tours
 * 192 bit : 12 tours
