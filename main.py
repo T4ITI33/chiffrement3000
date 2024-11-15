@@ -9,7 +9,12 @@ def MixColumns():
 def decoupage_bloc():
 
 #cette fonction transforme le texte en hexadécimal.
-def text_en_hexa():
+def text_en_hex(text):
+    return ''.join(format(ord(char), '02X') for char in text)
+
+texte = "hello"
+resultat = text_to_hex(texte)
+print(resultat)
 
 #cette fonction transforme l'hexadécimalen binaire.
 def hexa_en_bin():
