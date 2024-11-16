@@ -5,7 +5,8 @@ def ShiftRows():
 def MixColumns():
 
 
-#cette fonction découpe le message en matrice de taille 4x4. Chaque case correspond à un caractère. Si il manque des caractère dans la derniere matrice on ajoute des espace. 20 en hexadécimal
+#cette fonction découpe le message en matrice de taille 4x4. 
+#Chaque case correspond à un caractère. Si il manque des caractère dans la dernière matrice, on ajoute des espaces, 20 en hexadécimal.
 #la fonction retourne une liste de matrices
 def decoupe_en_matrices(phrase, taille_bloc=16):
     # Étape 1 : Compléter le texte pour qu'il soit un multiple de 16
@@ -34,6 +35,7 @@ def text_en_hex(text):
 
 
 #cette fonction transforme chaque hexadécimal d'une matrice en binaire.
+#plus nécessaire
 def hex_matrix_to_binary(hex_matrix):
     binary_matrix = [[format(int(hex_code, 16), '08b') for hex_code in row] for row in hex_matrix]
     return binary_matrix
@@ -41,41 +43,24 @@ def hex_matrix_to_binary(hex_matrix):
 
 
 #cette fonction transforme chaque binaire d'une matrice en hexadécimal.
+#plus nécessaire
 def binary_matrix_to_hex(binary_matrix):
     hex_matrix = [[format(int(binary_code, 2), '02x') for binary_code in row] for row in binary_matrix]
     return hex_matrix
 
-#cette fonction applique l'opération xor en 2 ou 3 éléments
-def xor(phrase,cle_secret):
-    texte1=texte_en_bin(phrase)
-    texte2=texte_en_bin(cle_secret)
-    combine=""
-    if len(texte1)>len(texte2):       
-        for bit in range(len(texte2)):
-            if texte1[bit]==texte2[bit]:
-                combine=combine+"0"
-            else:
-                combine=combine+"1"
-        return combine+texte1[len(texte2):]
-    elif len(texte2)>len(texte1):
-        for bit in range(len(texte1)):
-            if texte1[bit]==texte2[bit]:
-                combine=combine+"0"
-            else:
-                combine=combine+"1"
-        return combine+texte2[len(texte1):]
-    for bit in range(len(texte1)):
-        print(texte1[bit],texte2[bit])
-        if texte1[bit]==texte2[bit]:
-            combine=combine+"0"
-        else:
-            combine=combine+"1"
-    return combine
+
+
+#cette fonction applique l'opération xor en 2 caractère en hexadécimal
+def xor(phrase, cle):
+    # Convertie les caractere en hexadécimal en entiers et effectue le XOR
+    resultat = int(phrase, 16) ^ int(cle, 16)
+    # Formate le résultat en hexadécimal
+    return format(resultat, f'0{len(phrase)}x')
 
 
 
 
-#fonction de chiffrement
+#fonction de chiffrement, c'est la fonction principale
 def chiffrement(texte_en_clair, clé):
 
 
