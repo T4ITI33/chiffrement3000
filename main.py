@@ -64,15 +64,22 @@ def xor(phrase, cle):
 
 """ cette fonction retourne le hash de 128 bits pour la clé en utilisant MD5 """
 def hash_128bit(cle):
-    hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en MD de la clé
+    hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en MD5 de la clé
     return hash_object.hexdigest() # on retourne le résultat en hexadécimal
 
 
 
 """ cette fonction retourne le hash de 192 bits pour la clé en tronquant SHA-384 """
-def hash_192bit(password: str) -> str:
+def hash_192bit(password):
     hash_object = hashlib.sha384(password.encode()) # on met dans 'hash_object' le hash en SHA-384 de la clé
-    return hash_object.hexdigest()[:48]  # on retourne le resultat en hexadécimal en enlevant 48 caractères 
+    return hash_object.hexdigest()[:48]  # on retourne le résultat en hexadécimal en enlevant 48 caractères 
+
+
+
+""" cette fonction retourne le hash de 256 bits pour la clé en utilisant SHA-256 """
+def hash_256bit(password):
+    hash_object = hashlib.sha256(password.encode()) # on met dans 'hash_object' le hash en SHA-256 de la clé
+    return hash_object.hexdigest() # on retourne le résultat en hexadécimal 
 
 
 
