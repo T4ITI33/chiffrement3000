@@ -2,7 +2,7 @@ import hashlib
 
 
 """ les 4 fonctions principales """
-def AddRoundKey128(): # pour cette fonction on a besoin de SubBytes
+def AddRoundKey128(): 
 def SubBytes():
 def ShiftRows():
 def MixColumns():
