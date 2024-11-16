@@ -17,9 +17,7 @@ Envoyer un message chiffré, signé électroniquement et caché.
 
 ## A faire
 
-* se renseigner sur le fonctionnement de AES
-* détaillé chaque étapes
-* définir des fonctions à chaque étapes pour faciliter le développement
+* faire les fonction pour AddRoundKey, SubBytes, ShiftRows et MixColumns
 
 ## Fonctionnement du ciffrement AES
 

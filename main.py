@@ -72,12 +72,14 @@ def xor(phrase,cle_secret):
             combine=combine+"1"
     return combine
 
+
+
+
 #fonction de chiffrement
 def chiffrement(texte_en_clair, clé):
 
 
     
-    def taille_clé():
 
     AddRoundKey(clé):
 
@@ -93,8 +95,15 @@ def chiffrement(texte_en_clair, clé):
     ShiftRows():
     AddRoundKey(LastRoundKey):
 
+
+return text_chiffre
+
+
+
+
 #fonction de déchiffrement
 def déchiffrement(text_chiffré, clé):
 
+return text_dechiffre
 
 
