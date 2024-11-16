@@ -63,6 +63,12 @@ def xor(phrase, cle):
 
 
 
+"""Retourne un hash de 128 bits pour le mot de passe donné en utilisant MD5."""
+def hash_128bit(cle):
+    hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en md5 de la clé
+    return hash_object.hexdigest() # on retourne le résultat en hexadécimal
+
+
 
 """ fonction de chiffrement, c'est la fonction principale """
 def chiffrement(texte_en_clair, cle, taille):
