@@ -61,10 +61,23 @@ def xor(phrase, cle):
 
 
 #fonction de chiffrement, c'est la fonction principale
-def chiffrement(texte_en_clair, clé):
+def chiffrement(texte_en_clair, cle, taille):
 
+    #dans la variable 'msg' il y a le texte découpé en matrice 4x4
+    msg = decoupe_en_matrices(texte_en_clair)
 
+    #dans la variable 'hexadecimal' il y les matrice avec les caractères remplacer par leurs valeurs en hexadécimal
+    hexadecimal = []
+    for matrice in hexadecimal:
+        hexadecimal.append(text_en_hex(matrice))
     
+
+
+    #ici il doit y avoir la partie concernant la clé
+    #il faut faire en sorte que celle ci soit de taille 128bit, 192bit ou 256bit en fonction de la demande de l'utilisateur
+    #on pourrait avoir un mdp qui est rentré, puis on prend le hash de celui-ci avec la taille demandé
+    #par exemple, si on veut un clé de 128bit on peut prendre du MD5 ou bien si on veut 256bit on peut prendre du SHA256
+
 
     AddRoundKey(clé):
 
