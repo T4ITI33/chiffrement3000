@@ -2,7 +2,7 @@ import hashlib
 
 
 """ les 4 fonctions principales """
-def AddRoundKey():
+def AddRoundKey128(): # pour cette fonction on a besoin de SubBytes
 def SubBytes():
 def ShiftRows():
 def MixColumns():
@@ -86,6 +86,19 @@ def hash_256bit(password):
 """ fonction de chiffrement, c'est la fonction principale """
 def chiffrement(texte_en_clair, cle, taille):
 
+    """ on hash la clé en fonction de la taille souhaité """
+    if taille == 128:
+        cle_hash = hash_128bit(cle)
+    elif taille == 192:
+        cle_hash = hash_192bit(cle)
+    elif taille == 256:
+        cle_hash hash_256bit(cle)
+    else:
+        print("pas la bonne taille pour la clé")
+        return 0
+   
+
+
     msg = decoupe_en_matrices(texte_en_clair) # dans la variable 'msg' il y a le texte découpé en matrice 4x4
 
     hexadecimal = [] # dans la variable 'hexadecimal' on va mettre les matrice avec l'hexadécimal
@@ -94,13 +107,8 @@ def chiffrement(texte_en_clair, cle, taille):
     
 
 
-    #ici il doit y avoir la partie concernant la clé
-    #il faut faire en sorte que celle ci soit de taille 128bit, 192bit ou 256bit en fonction de la demande de l'utilisateur
-    #on pourrait avoir un mdp qui est rentré, puis on prend le hash de celui-ci avec la taille demandé
-    #par exemple, si on veut un clé de 128bit on peut prendre du MD5 ou bien si on veut 256bit on peut prendre du SHA256
 
-
-    AddRoundKey(clé):
+    AddRoundKey128(clé):
 
     #x dépend de la taille de la clé
     for x tours:
@@ -112,7 +120,7 @@ def chiffrement(texte_en_clair, cle, taille):
 
     SubBytes():
     ShiftRows():
-    AddRoundKey(LastRoundKey):
+    AddRoundKey128(LastRoundKey):
 
 
 return text_chiffre
