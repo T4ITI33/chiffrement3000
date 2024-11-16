@@ -39,7 +39,6 @@ def text_en_hex(text):
 
 
 
-
 #cette fonction transforme chaque hexadécimal d'une matrice en binaire.
 #plus nécessaire
 def hex_matrix_to_binary(hex_matrix):
@@ -63,10 +62,17 @@ def xor(phrase, cle):
 
 
 
-"""Retourne un hash de 128 bits pour le mot de passe donné en utilisant MD5."""
+""" cette fonction retourne le hash de 128 bits pour la clé en utilisant MD5 """
 def hash_128bit(cle):
-    hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en md5 de la clé
+    hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en MD de la clé
     return hash_object.hexdigest() # on retourne le résultat en hexadécimal
+
+
+
+""" cette fonction retourne le hash de 192 bits pour la clé en tronquant SHA-384 """
+def hash_192bit(password: str) -> str:
+    hash_object = hashlib.sha384(password.encode()) # on met dans 'hash_object' le hash en SHA-384 de la clé
+    return hash_object.hexdigest()[:48]  # on retourne le resultat en hexadécimal en enlevant 48 caractères 
 
 
 
@@ -111,5 +117,3 @@ return text_chiffre
 def déchiffrement(text_chiffré, clé,taille):
 
 return text_dechiffre
-
-
