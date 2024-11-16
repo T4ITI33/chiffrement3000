@@ -8,16 +8,14 @@ phrase = [['56', '6f', '69', '63'],
 def xor(phrase, cle):
     # Convertir les chaînes hexadecimal en entiers, effectuer le XOR, puis reconvertir en hexadécimal
     resultat = int(phrase, 16) ^ int(cle, 16)
-    # Formater le résultat en binaire, en conservant la longueur maximale entre les deux chaînes
-    return format(resultat, f'0{max(len(phrase), len(cle))}x')
+    # Formater le résultat en hexadécimal
+    return format(resultat, f'0{len(phrase)}x')
+
+
 
 # Exemple d'utilisation
 
-
 cle = ['20', '63', '68', '69']
-
-
-
 
 for ligne in phrase:
     for i in range(len(ligne)-1):
