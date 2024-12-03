@@ -25,7 +25,6 @@ S_BOX = [
 def AddRoundKey128(): 
 def SubBytes():
 def ShiftRows():
-def MixColumns():
 
 
 
@@ -34,7 +33,7 @@ cette fonction découpe le message en matrice de taille 4x4.
 Chaque case correspond à un caractère. Si il manque des caractère dans la dernière matrice, on ajoute des espaces, 20 en hexadécimal.
 la fonction retourne une liste de matrices
 """
-def decoupe_en_matrices(phrase, taille_bloc=16):
+def texte_en_matrice(phrase, taille_bloc=16):
     """ Étape 1 : Compléter le texte pour qu'il soit un multiple de 16 """
     if len(phrase) % taille_bloc != 0:
         phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
@@ -49,6 +48,26 @@ def decoupe_en_matrices(phrase, taille_bloc=16):
         liste_matrices.append(matrice)
     
     return liste_matrices
+
+
+
+def cle_en_matrice(phrase, taille_bloc=32):
+    # Ajuster la taille de la phrase pour être un multiple de la taille du bloc
+    if len(phrase) % taille_bloc != 0:
+        phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
+    
+    # Découper la phrase en blocs de la taille spécifiée
+    blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
+    
+    matrices = []
+    for bloc in blocs:
+        # Construire une matrice 4x4 où chaque case contient deux caractères
+        matrice = [[bloc[(i*8) + (j*2):(i*8) + (j*2) + 2] for j in range(4)] for i in range(4)]
+        matrices.append(matrice)
+    
+    return matrices
+
+
 
 
 
@@ -88,23 +107,35 @@ def hash_256bit(password):
 
 
 
+def MixColumns():
+
+
+
+
+
+
 """ fonction de chiffrement, c'est la fonction principale """
+
+
+
+
+
 def chiffrement(texte_en_clair, cle, taille):
 
     """ on hash la clé en fonction de la taille souhaité """
     if taille == 128:
-        cle_hash = hash_128bit(cle)
+        cle_hash = hash_128bit(cle, 32)
     elif taille == 192:
-        cle_hash = hash_192bit(cle)
+        cle_hash = hash_192bit(cle, 32)
     elif taille == 256:
-        cle_hash hash_256bit(cle)
+        cle_hash hash_256bit(cle, 32)
     else:
         print("pas la bonne taille pour la clé")
         return 0
    
 
 
-    msg = decoupe_en_matrices(texte_en_clair) # dans la variable 'msg' il y a le texte découpé en matrice 4x4
+    msg = texte_en_matrice(texte_en_clair) # dans la variable 'msg' il y a le texte découpé en matrice 4x4
 
     hexadecimal = [] # dans la variable 'hexadecimal' on va mettre les matrice avec l'hexadécimal
     for matrice in msg: # on parcourt les matrice de 'msg'
