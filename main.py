@@ -127,27 +127,23 @@ def hash_256bit(password):
 
 """
 #fonction de chiffrement, c'est la fonction principale 
+- on comment par prendre le hash de la clé en fonction de la taille demandé
+- ensuite on le met en matrice (1 matrice 4x4 pour une clé 128bits)
+- on met le texte en matrice
+- ensuite on le transforme en hexadécimal
+- on peut appliquer l'algorithme c'est à dite
+    - addRoundKey(cle)
+    - pendant x tour:
+        - subBytes
+        - shiftRows
+        - mixColumns
+        - addRoundKey(roundKey)
+    - puis dernier tous sans mixColumns
+-on affiche le texte chiffré
+ """
 def chiffrement(texte_en_clair, cle, taille):
-
-    # on hash la clé en fonction de la taille souhaité 
-# def MixColumns():
-
-
-
-
-
-
-fonction de chiffrement, c'est la fonction principale
-pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice()
-pour le texte il d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa() """
-
-
-
-
-
-def chiffrement(texte_en_clair, cle, taille):
-    print("Cle normale:\n",cle)
     """ on hash la clé en fonction de la taille souhaité """
+    """ pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice() """
     if taille == 128:
         cle_hash = hash_128bit(cle)
     elif taille == 192:
@@ -162,6 +158,7 @@ def chiffrement(texte_en_clair, cle, taille):
     cle_hash = cle_en_matrice(cle_hash)
     print("Clé en matrice:\n",cle_hash)
  
+    """ pour le texte il d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
     print("Texte normal:\n",texte_en_clair)
     msg = texte_en_matrice(texte_en_clair) 
     print("Texte en matrice:\n",msg)
