@@ -197,6 +197,16 @@ def déchiffrement(text_chiffré, clé,taille):
     return 0
 
 
+def main():
+    texte_a_chiffrer = "Voici un exemeple de texte à chiffrer."
+    cle_secrete = "Ceci est ma clé secrète."
+    chiffrement(texte_a_chiffrer, cle_secrete, 128)
+
+
+if __name__ == "__main__":
+    main()
+
+
 
 
 
@@ -222,13 +232,3 @@ test_state = ShiftRows(test_state)
 print("\nÉtat après ShiftRows:")
 for row in test_state:
     print(row)
-
-
-def main():
-    texte_a_chiffrer = "Voici un exemeple de texte à chiffrer."
-    cle_secrete = "Ceci est ma clé secrète."
-    chiffrement(texte_a_chiffrer, cle_secrete, 128)
-
-
-if __name__ == "__main__":
-    main()
