@@ -22,10 +22,37 @@ S_BOX = [
 
 
 """ les 4 fonctions principales """
-def AddRoundKey128(): 
-def SubBytes():
-def ShiftRows():
-def MixColumns():
+#def AddRoundKey128(): 
+
+def SubBytes(state):
+    """
+    Applique la substitution S-Box à chaque octet de l'état.
+    :param state: La matrice 4x4 représentant l'état actuel.
+    :return: La matrice après application de SubBytes.
+    """
+    for i in range(4):  # Parcourt chaque ligne
+        for j in range(4):  # Parcourt chaque colonne
+            byte = state[i][j]
+            # Convertir l'octet de hexadécimal (en str) en entier, chercher dans la S_BOX, et reconvertir en hexadécimal
+            row = int(byte[0], 16)  # Ligne dans la S-box
+            col = int(byte[1], 16)  # Colonne dans la S-box
+            print( byte , row , col)
+            state[i][j] = format(S_BOX[row][col], '02x')  # Remplace par la valeur correspondante dans la S-box
+    return state
+
+def ShiftRows(state):
+    """
+    Décale les lignes de la matrice d'état.
+    :param state: La matrice 4x4 représentant l'état actuel.
+    :return: La matrice après application de ShiftRows.
+    """
+    for i in range(1, 4):  # On ne touche pas à la première ligne (i=0)
+        print( state[i][i:])
+        print(state[i][:i])
+        state[i] = state[i][i:] + state[i][:i]  # Décale de i positions à gauche
+    return state
+
+#def MixColumns():
 
 
 
@@ -102,11 +129,11 @@ def hash_256bit(password):
     return hash_object.hexdigest() # on retourne le résultat en hexadécimal 
 
 
-
-""" fonction de chiffrement, c'est la fonction principale """
+"""
+#fonction de chiffrement, c'est la fonction principale 
 def chiffrement(texte_en_clair, cle, taille):
 
-    """ on hash la clé en fonction de la taille souhaité """
+    # on hash la clé en fonction de la taille souhaité 
     if taille == 128:
         cle_hash = hash_128bit(cle)
     elif taille == 192:
@@ -152,3 +179,28 @@ return text_chiffre
 def déchiffrement(text_chiffré, clé,taille):
 
 return text_dechiffre
+
+"""
+
+test_state = [
+    ['19', 'a0', '9a', 'e9'],
+    ['3d', 'f4', 'c6', 'f8'],
+    ['e3', 'e2', '8d', '48'],
+    ['be', '2b', '2a', '08']
+]
+
+print("État avant SubBytes:")
+for row in test_state:
+    print(row)
+
+test_state = SubBytes(test_state)
+
+print("\nÉtat après SubBytes:")
+for row in test_state:
+    print(row)
+
+test_state = ShiftRows(test_state)
+
+print("\nÉtat après ShiftRows:")
+for row in test_state:
+    print(row)
