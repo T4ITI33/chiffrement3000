@@ -22,9 +22,9 @@ S_BOX = [
 
 
 """ les 4 fonctions principales """
-def AddRoundKey128(): 
-def SubBytes():
-def ShiftRows():
+# def AddRoundKey128(): 
+# def SubBytes():
+# def ShiftRows():
 
 
 
@@ -107,7 +107,7 @@ def hash_256bit(password):
 
 
 
-def MixColumns():
+# def MixColumns():
 
 
 
@@ -116,14 +116,14 @@ def MixColumns():
 
 """ fonction de chiffrement, c'est la fonction principale
 pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice()
-pour le texte il d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
+pour le texte il d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa() """
 
 
 
 
 
 def chiffrement(texte_en_clair, cle, taille):
-    print(cle)
+    print("Cle normale:\n",cle)
     """ on hash la clé en fonction de la taille souhaité """
     if taille == 128:
         cle_hash = hash_128bit(cle)
@@ -135,20 +135,20 @@ def chiffrement(texte_en_clair, cle, taille):
         print("pas la bonne taille pour la clé")
         return 0
    
-    print(cle_hash)
+    print("Clé hasher:\n",cle_hash)
     cle_hash = cle_en_matrice(cle_hash)
-    print(cle_hash)
+    print("Clé en matrice:\n",cle_hash)
  
-    print(texte_en_clair)
+    print("Texte normal:\n",texte_en_clair)
     msg = texte_en_matrice(texte_en_clair) 
-    print(msg)
+    print("Texte en matrice:\n",msg)
     hexadecimal = [] 
     for matrice in msg:
         hexadecimal.append(text_en_hexa(matrice)) 
-    print(hexadecimal)
+    print("Texte en hexadécimal:\n",hexadecimal)
 
 
-
+"""
     AddRoundKey128(clé):
 
     #x dépend de la taille de la clé 
@@ -162,14 +162,23 @@ def chiffrement(texte_en_clair, cle, taille):
     SubBytes():
     ShiftRows():
     AddRoundKey128(LastRoundKey):
-
-
-return text_chiffre
+"""
+    # return text_chiffre
 
 
 
 
 #fonction de déchiffrement
 def déchiffrement(text_chiffré, clé,taille):
+    # return text_dechiffre   
+    return 0
 
-return text_dechiffre
+
+def main():
+    texte_a_chiffrer = "Voici un exemeple de texte à chiffrer."
+    cle_secrete = "Ceci est ma clé secrète."
+    chiffrement(texte_a_chiffrer, cle_secrete, 128)
+
+
+if __name__ == "__main__":
+    main()
