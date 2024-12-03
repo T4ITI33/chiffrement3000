@@ -52,20 +52,20 @@ def texte_en_matrice(phrase, taille_bloc=16):
 
 
 def cle_en_matrice(phrase, taille_bloc=32):
-    # Ajuster la taille de la phrase pour être un multiple de la taille du bloc
+    """ Étape 1 : Compléter le texte pour qu'il soit un multiple de 16 """
     if len(phrase) % taille_bloc != 0:
         phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
     
-    # Découper la phrase en blocs de la taille spécifiée
+    """ Étape 2 : Découper la phrase en blocs de 32 caractères """
     blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
     
-    matrices = []
+    """ Étape 3 : Convertir chaque bloc en une matrice 4x4, 1 case = 2 caractère"""
+    liste_matrices = []
     for bloc in blocs:
-        # Construire une matrice 4x4 où chaque case contient deux caractères
         matrice = [[bloc[(i*8) + (j*2):(i*8) + (j*2) + 2] for j in range(4)] for i in range(4)]
-        matrices.append(matrice)
+        liste_matrices.append(matrice)
     
-    return matrices
+    return liste_matrices
 
 
 
@@ -124,11 +124,11 @@ def chiffrement(texte_en_clair, cle, taille):
 
     """ on hash la clé en fonction de la taille souhaité """
     if taille == 128:
-        cle_hash = hash_128bit(cle, 32)
+        cle_hash = hash_128bit(cle)
     elif taille == 192:
-        cle_hash = hash_192bit(cle, 32)
+        cle_hash = hash_192bit(cle)
     elif taille == 256:
-        cle_hash hash_256bit(cle, 32)
+        cle_hash = hash_256bit(cle)
     else:
         print("pas la bonne taille pour la clé")
         return 0
