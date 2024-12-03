@@ -217,7 +217,7 @@ test_state = [
     ['be', '2b', '2a', '08']
 ]
 
-print("État avant SubBytes:")
+print("\nÉtat avant SubBytes:")
 for row in test_state:
     print(row)
 
