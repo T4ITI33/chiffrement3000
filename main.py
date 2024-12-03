@@ -34,6 +34,7 @@ def SubBytes(state):
             state[i][j] = format(S_BOX[row][col], '02x')
     return state
 
+
 def ShiftRows(state):
     for i in range(1, 4): 
         print( state[i][i:])
@@ -52,37 +53,27 @@ Chaque case correspond à un caractère. Si il manque des caractère dans la der
 la fonction retourne une liste de matrices
 """
 def texte_en_matrice(phrase, taille_bloc=16):
-    """ Étape 1 : Compléter le texte pour qu'il soit un multiple de 16 """
+
     if len(phrase) % taille_bloc != 0:
         phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
-    
-    """ Étape 2 : Découper la phrase en blocs de 16 caractères """
     blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
-    
-    """ Étape 3 : Convertir chaque bloc en une matrice 4x4 """
     liste_matrices = []
     for bloc in blocs:
         matrice = [[bloc[i + j*4] for i in range(4)] for j in range(4)]
         liste_matrices.append(matrice)
-    
     return liste_matrices
 
 
 
 def cle_en_matrice(phrase, taille_bloc=32):
-    """ Étape 1 : Compléter le texte pour qu'il soit un multiple de 16 """
+
     if len(phrase) % taille_bloc != 0:
         phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
-    
-    """ Étape 2 : Découper la phrase en blocs de 32 caractères """
     blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
-    
-    """ Étape 3 : Convertir chaque bloc en une matrice 4x4, 1 case = 2 caractère"""
     liste_matrices = []
     for bloc in blocs:
         matrice = [[bloc[(i*8) + (j*2):(i*8) + (j*2) + 2] for j in range(4)] for i in range(4)]
         liste_matrices.append(matrice)
-    
     return liste_matrices
 
 
