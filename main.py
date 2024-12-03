@@ -72,7 +72,7 @@ def cle_en_matrice(phrase, taille_bloc=32):
 
 
 """ cette fonction transforme chaque caractere d'une matrice en hexadécimal. """
-def text_en_hex(text):
+def text_en_hexa(text):
     hex_matrice = [[format(ord(char), '02x') for char in row] for row in text]
     return hex_matrice
 
@@ -114,14 +114,16 @@ def MixColumns():
 
 
 
-""" fonction de chiffrement, c'est la fonction principale """
+""" fonction de chiffrement, c'est la fonction principale
+pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice()
+pour le texte il d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
 
 
 
 
 
 def chiffrement(texte_en_clair, cle, taille):
-
+    print(cle)
     """ on hash la clé en fonction de la taille souhaité """
     if taille == 128:
         cle_hash = hash_128bit(cle)
@@ -133,14 +135,17 @@ def chiffrement(texte_en_clair, cle, taille):
         print("pas la bonne taille pour la clé")
         return 0
    
-
-
-    msg = texte_en_matrice(texte_en_clair) # dans la variable 'msg' il y a le texte découpé en matrice 4x4
-
-    hexadecimal = [] # dans la variable 'hexadecimal' on va mettre les matrice avec l'hexadécimal
-    for matrice in msg: # on parcourt les matrice de 'msg'
-        hexadecimal.append(text_en_hex(matrice)) # on la transforme en hexadécimal et on l'ajoute à 'hexadecimal'
-    
+    print(cle_hash)
+    cle_hash = cle_en_matrice(cle_hash)
+    print(cle_hash)
+ 
+    print(texte_en_clair)
+    msg = texte_en_matrice(texte_en_clair) 
+    print(msg)
+    hexadecimal = [] 
+    for matrice in msg:
+        hexadecimal.append(text_en_hexa(matrice)) 
+    print(hexadecimal)
 
 
 
