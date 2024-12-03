@@ -198,7 +198,7 @@ def déchiffrement(text_chiffré, clé,taille):
 
 
 
-"""
+
 
 test_state = [
     ['19', 'a0', '9a', 'e9'],
@@ -222,7 +222,7 @@ test_state = ShiftRows(test_state)
 print("\nÉtat après ShiftRows:")
 for row in test_state:
     print(row)
-=======
+
 
 def main():
     texte_a_chiffrer = "Voici un exemeple de texte à chiffrer."
@@ -232,4 +232,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-"""
