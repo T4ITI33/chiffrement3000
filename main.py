@@ -43,35 +43,20 @@ def decoupe_en_matrices(phrase, taille_bloc=16):
     blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
     
     """ Étape 3 : Convertir chaque bloc en une matrice 4x4 """
-    matrices = []
+    liste_matrices = []
     for bloc in blocs:
         matrice = [[bloc[i + j*4] for i in range(4)] for j in range(4)]
-        matrices.append(matrice)
+        liste_matrices.append(matrice)
     
-    return matrices
+    return liste_matrices
 
 
 
 """ cette fonction transforme chaque caractere d'une matrice en hexadécimal. """
 def text_en_hex(text):
-    hex_matrix = [[format(ord(char), '02x') for char in row] for row in text]
-    return hex_matrix
+    hex_matrice = [[format(ord(char), '02x') for char in row] for row in text]
+    return hex_matrice
 
-
-
-#cette fonction transforme chaque hexadécimal d'une matrice en binaire.
-#plus nécessaire
-def hex_matrix_to_binary(hex_matrix):
-    binary_matrix = [[format(int(hex_code, 16), '08b') for hex_code in row] for row in hex_matrix]
-    return binary_matrix
-
-
-
-#cette fonction transforme chaque binaire d'une matrice en hexadécimal.
-#plus nécessaire
-def binary_matrix_to_hex(binary_matrix):
-    hex_matrix = [[format(int(binary_code, 2), '02x') for binary_code in row] for row in binary_matrix]
-    return hex_matrix
 
 
 
@@ -130,7 +115,7 @@ def chiffrement(texte_en_clair, cle, taille):
 
     AddRoundKey128(clé):
 
-    #x dépend de la taille de la clé
+    #x dépend de la taille de la clé 
     for x tours:
         SubBytes():
         ShiftRows():
