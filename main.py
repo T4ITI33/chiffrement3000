@@ -22,7 +22,43 @@ S_BOX = [
 
 
 """ les 4 fonctions principales """
+
+
 #def AddRoundKey128(): 
+
+
+calcul de la clé de tour
+cle en 4 col
+pour obtenir la col1 de la clé2 on fait un RotWord sur la col4
+(la case du haut vas en bas et toutes les autre remonte de 1)
+ensuite on fait un Subytes sur toute la col4
+ensuite on fait un xor entre la col4 la col1 et Rcon(*le nb de tour)
+cela donne la col5 (ou future col1)
+
+pour obtenir la col2 de la clé2 on fait un xor entre col2 et col5 (ou future col1)
+pour obtenir la col3 de la clé2 on fait un xor entre col3 et col6 (ou future col2)
+pour obtenir la col4 de la clé2 on fait un xor entre col4 et col7 (ou future col3)
+
+
+
+d'un point de vu de la matrice ça donne
+rotword sur col4
+subbytes sur col4
+xor entre col1 col4 et Rcon
+le resultat deviens col4, mes autres avance de 1 et col1 disparrait
+puis
+xor entre col1 et col4
+le resultat deviens col4, mes autres avance de 1 et col1 disparrait
+xor entre col1 et col4
+le resultat deviens col4, mes autres avance de 1 et col1 disparrait
+xor entre col1 et col4
+le resultat deviens col4, mes autres avance de 1 et col1 disparrait
+on a la nouvelle clé
+
+
+
+
+
 
 def SubBytes(state):
     for i in range(4):
@@ -161,6 +197,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     print("Texte en hexadécimal:\n",hexadecimal)
 
 
+
     """ application de l'algorithme 
         - AddRoundKey
         - boucle:
@@ -174,22 +211,10 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         """
 
 
-        
-"""
-    AddRoundKey128(clé):
 
-    #x dépend de la taille de la clé 
-    for x tours:
-        SubBytes():
-        ShiftRows():
-        MixColumns():
-        AddRoundKey(RoundKey):
-    fin for
+    AddRoundKey()
 
-    SubBytes():
-    ShiftRows():
-    AddRoundKey128(LastRoundKey):
-"""
+
     # return text_chiffre
 
 
