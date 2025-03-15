@@ -73,8 +73,7 @@ def xor(phrase, cle):
 
 
 
-def test (){
+def test ():
     phrase = "Voici une phrase test"
     matrice = texte_en_matrice(phrase)
     print(matrice)
-}
