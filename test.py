@@ -38,6 +38,7 @@ def texte_en_matrice(phrase, taille_bloc=16):
     for bloc in blocs:
         matrice = [[bloc[i + j*4] for i in range(4)] for j in range(4)]
         liste_matrices.append(matrice)
+    print(liste_matrices)
     return liste_matrices
 
 
