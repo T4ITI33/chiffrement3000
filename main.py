@@ -64,7 +64,7 @@ def texte_en_matrice(phrase, taille_bloc=16):
     return liste_matrices
 
 
-
+""" pareil mais pour la clé """
 def cle_en_matrice(phrase, taille_bloc=32):
 
     if len(phrase) % taille_bloc != 0:
@@ -88,7 +88,7 @@ def text_en_hexa(text):
 
 
 
-""" cette fonction applique l'opération xor en 2 caractère en hexadécimal """
+""" cette fonction applique l'opération xor entre 2 caractère en hexadécimal """
 def xor(phrase, cle):
     resultat = int(phrase, 16) ^ int(cle, 16) # Convertie les caractere hexadécimals en entiers et effectue le XOR
     return format(resultat, f'0{len(phrase)}x') # Formate le résultat en hexadécimal
@@ -118,7 +118,7 @@ def hash_256bit(password):
 
 """
 #fonction de chiffrement, c'est la fonction principale 
-- on comment par prendre le hash de la clé en fonction de la taille demandé
+- on commence par prendre le hash de la clé en fonction de la taille demandé
 - ensuite on le met en matrice (1 matrice 4x4 pour une clé 128bits)
 - on met le texte en matrice
 - ensuite on le transforme en hexadécimal
@@ -132,14 +132,14 @@ def hash_256bit(password):
     - puis dernier tous sans mixColumns
 -on affiche le texte chiffré
  """
-def chiffrement(texte_en_clair, cle, taille):
+def chiffrement(texte_en_clair, cle, taille_cle):
     """ on hash la clé en fonction de la taille souhaité """
     """ pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice() """
-    if taille == 128:
+    if taille_cle == 128:
         cle_hash = hash_128bit(cle)
-    elif taille == 192:
+    elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
-    elif taille == 256:
+    elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
     else:
         print("pas la bonne taille pour la clé")
@@ -149,7 +149,9 @@ def chiffrement(texte_en_clair, cle, taille):
     cle_hash = cle_en_matrice(cle_hash)
     print("Clé en matrice:\n",cle_hash)
  
-    """ pour le texte il d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
+
+
+    """ pour le texte il faut d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
     print("Texte normal:\n",texte_en_clair)
     msg = texte_en_matrice(texte_en_clair) 
     print("Texte en matrice:\n",msg)
@@ -159,6 +161,20 @@ def chiffrement(texte_en_clair, cle, taille):
     print("Texte en hexadécimal:\n",hexadecimal)
 
 
+    """ application de l'algorithme 
+        - AddRoundKey
+        - boucle:
+            - SubBytes
+            - ShiftRows
+            - MixColumns
+            - AddRoundKey
+        - SubBytes
+        - ShiftRows
+        - AddRoundKey
+        """
+
+
+        
 """
     AddRoundKey128(clé):
 
