@@ -21,13 +21,20 @@ S_BOX = [
 ]
 
 
+def print_en_matrice(texte):
+    """affiche une matrice"""
+    for matrice in texte:
+        for ligne in matrice:
+            print(ligne)
+        print("\n")
+
 """ les 4 fonctions principales """
 
 
 #def AddRoundKey128(): 
 
 
-calcul de la clé de tour
+"""calcul de la clé de tour
 cle en 4 col
 pour obtenir la col1 de la clé2 on fait un RotWord sur la col4
 (la case du haut vas en bas et toutes les autre remonte de 1)
@@ -37,11 +44,11 @@ cela donne la col5 (ou future col1)
 
 pour obtenir la col2 de la clé2 on fait un xor entre col2 et col5 (ou future col1)
 pour obtenir la col3 de la clé2 on fait un xor entre col3 et col6 (ou future col2)
-pour obtenir la col4 de la clé2 on fait un xor entre col4 et col7 (ou future col3)
+pour obtenir la col4 de la clé2 on fait un xor entre col4 et col7 (ou future col3)"""
 
 
 
-d'un point de vu de la matrice ça donne
+"""d'un point de vu de la matrice ça donne
 rotword sur col4
 subbytes sur col4
 xor entre col1 col4 et Rcon
@@ -53,7 +60,7 @@ xor entre col1 et col4
 le resultat deviens col4, mes autres avance de 1 et col1 disparrait
 xor entre col1 et col4
 le resultat deviens col4, mes autres avance de 1 et col1 disparrait
-on a la nouvelle clé
+on a la nouvelle clé"""
 
 
 
@@ -117,10 +124,16 @@ def cle_en_matrice(phrase, taille_bloc=32):
 
 
 """ cette fonction transforme chaque caractere d'une matrice en hexadécimal. """
-def text_en_hexa(text):
+def matrice_en_hexa(text):
     hex_matrice = [[format(ord(char), '02x') for char in row] for row in text]
     return hex_matrice
 
+""" cette fonction appel matrice_en_hexa pour chaque matrice d'un texte """
+def texte_en_hexa(texte):
+    hexadecimal = [] 
+    for matrice in texte:
+        hexadecimal.append(matrice_en_hexa(matrice)) 
+    return hexadecimal
 
 
 
@@ -167,37 +180,46 @@ def hash_256bit(password):
         - addRoundKey(roundKey)
     - puis dernier tous sans mixColumns
 -on affiche le texte chiffré
- """
+"""
+
 def chiffrement(texte_en_clair, cle, taille_cle):
     """ on hash la clé en fonction de la taille souhaité """
     """ pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice() """
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
+        print("taille de la clé: 128 bits")
     elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
+        print("taille de la clé: 192 bits")
     elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
+        print("taille de la clé: 256 bits")
     else:
         print("pas la bonne taille pour la clé")
         return 0
    
-    print("Clé hasher:\n",cle_hash)
+    print("Clé hashé:\n",cle_hash)
     cle_hash = cle_en_matrice(cle_hash)
-    print("Clé en matrice:\n",cle_hash)
+    print("\nClé en matrice:")
+    print_en_matrice(cle_hash)
  
 
 
     """ pour le texte il faut d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
     print("Texte normal:\n",texte_en_clair)
-    msg = texte_en_matrice(texte_en_clair) 
-    print("Texte en matrice:\n",msg)
-    hexadecimal = [] 
-    for matrice in msg:
-        hexadecimal.append(text_en_hexa(matrice)) 
-    print("Texte en hexadécimal:\n",hexadecimal)
 
+    texte_matrice = texte_en_matrice(texte_en_clair) 
+    print("\nTexte en matrice:")
+    print_en_matrice(texte_matrice)
 
+    hexadecimal = texte_en_hexa(texte_matrice)
+    print("Texte en hexadécimal:\n")
+    print_en_matrice(hexadecimal)
 
+    #hexadecimal correspond au texte en hexa en matrice
+    
+    
+    for matrice in hexadecimal:
     """ application de l'algorithme 
         - AddRoundKey
         - boucle:
@@ -215,7 +237,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     AddRoundKey()
 
 
-    # return text_chiffre
+    return text_chiffre
 
 
 
@@ -227,7 +249,7 @@ def déchiffrement(text_chiffré, clé,taille):
 
 
 def main():
-    texte_a_chiffrer = "Voici un exemeple de texte à chiffrer."
+    texte_a_chiffrer = "Voici un exemple de texte à chiffrer."
     cle_secrete = "Ceci est ma clé secrète."
     chiffrement(texte_a_chiffrer, cle_secrete, 128)
 
@@ -239,25 +261,25 @@ if __name__ == "__main__":
 
 
 
-test_state = [
-    ['19', 'a0', '9a', 'e9'],
-    ['3d', 'f4', 'c6', 'f8'],
-    ['e3', 'e2', '8d', '48'],
-    ['be', '2b', '2a', '08']
-]
+# test_state = [
+#     ['19', 'a0', '9a', 'e9'],
+#     ['3d', 'f4', 'c6', 'f8'],
+#     ['e3', 'e2', '8d', '48'],
+#     ['be', '2b', '2a', '08']
+# ]
 
-print("\nÉtat avant SubBytes:")
-for row in test_state:
-    print(row)
+# print("\nÉtat avant SubBytes:")
+# for row in test_state:
+#     print(row)
 
-test_state = SubBytes(test_state)
+# test_state = SubBytes(test_state)
 
-print("\nÉtat après SubBytes:")
-for row in test_state:
-    print(row)
+# print("\nÉtat après SubBytes:")
+# for row in test_state:
+#     print(row)
 
-test_state = ShiftRows(test_state)
+# test_state = ShiftRows(test_state)
 
-print("\nÉtat après ShiftRows:")
-for row in test_state:
-    print(row)
+# print("\nÉtat après ShiftRows:")
+# for row in test_state:
+#     print(row)
