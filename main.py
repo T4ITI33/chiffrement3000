@@ -31,7 +31,13 @@ def print_en_matrice(texte):
 """ les 4 fonctions principales """
 
 
-#def AddRoundKey128(): 
+def AddRoundKey128(matrice_phrase, matrice_cle): 
+    phrase = matrice_phrase
+    for i in range(0,4 ):
+        for j in range(0,4):
+            phrase[i][j] = xor(matrice_phrase[i][j], matrice_cle[i][j])
+    return phrase
+
 
 
 """calcul de la clé de tour
@@ -219,7 +225,10 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     #hexadecimal correspond au texte en hexa en matrice
     
     
-    for matrice in hexadecimal:
+    for current_matrice in hexadecimal:
+        current_matrice = AddRoundKey128(current_matrice, cle_hash)
+        print(current_matrice)
+        
     """ application de l'algorithme 
         - AddRoundKey
         - boucle:
@@ -234,7 +243,6 @@ def chiffrement(texte_en_clair, cle, taille_cle):
 
 
 
-    AddRoundKey()
 
 
     return text_chiffre
