@@ -226,7 +226,11 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     
     
     for current_matrice in hexadecimal:
-        current_matrice = AddRoundKey128(current_matrice, cle_hash)
+        print("current matrice")
+        print(current_matrice)
+        print("cle", cle_hash)
+        current_matrice = AddRoundKey128(current_matrice, cle_hash[0])
+        print("apres addRoundKey")
         print(current_matrice)
         
     """ application de l'algorithme 
