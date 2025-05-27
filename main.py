@@ -21,6 +21,10 @@ S_BOX = [   [0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0
 
 ]
 
+RCON = [
+    "01000000", "02000000", "04000000", "08000000", "10000000",
+    "20000000", "40000000", "80000000", "1b000000", "36000000"
+]
 
 matrice_mixColumns = [
       [0x02, 0x03, 0x01, 0x01],
@@ -46,7 +50,50 @@ def AddRoundKey128(matrice_phrase, matrice_cle):
             phrase[i][j] = xor(matrice_phrase[i][j], matrice_cle[i][j])
     return phrase
 
+def KeyExpansion(key_hex, key_size_bits):
+    """Génère toutes les clés de tour en AES pour des clés 128, 192 ou 256 bits"""
+    Nb = 4  # nombre de colonnes de l'état
+    Nk = key_size_bits // 32  # nombre de mots dans la clé d'origine
+    Nr = {128: 10, 192: 12, 256: 14}[key_size_bits]  # nombre de tours
 
+    # Séparer la clé de départ en mots de 4 octets (8 caractères hex)
+    w = [key_hex[i:i+8] for i in range(0, len(key_hex), 8)]
+
+    for i in range(Nk, Nb * (Nr + 1)):
+        temp = w[i - 1]
+        if i % Nk == 0:
+            temp = xor_hex(SubWord(RotWord(temp)), RCON[(i // Nk) - 1])
+        elif Nk > 6 and i % Nk == 4:
+            temp = SubWord(temp)
+        w.append(xor_hex(w[i - Nk], temp))
+
+    # Convertir les mots en matrices de clé pour chaque round
+    round_keys = []
+    for r in range(Nr + 1):
+        round_key = [[None for _ in range(4)] for _ in range(4)]
+        for c in range(4):  # 4 colonnes
+            word = w[r * 4 + c]
+            for l in range(4):  # 4 lignes
+                round_key[l][c] = word[2 * l:2 * l + 2]
+        round_keys.append(round_key)
+    
+    return round_keys
+
+
+
+def RotWord(word):
+    """Rotation circulaire gauche sur un mot (4 octets en hex)"""
+    return word[2:] + word[:2]
+
+def SubWord(word):
+    """SubBytes sur un mot (8 caractères hex)"""
+    result = ""
+    for i in range(0, len(word), 2):
+        byte = word[i:i+2]
+        row = int(byte[0], 16)
+        col = int(byte[1], 16)
+        result += format(S_BOX[row][col], '02x')
+    return result
 
 """calcul de la clé de tour
 cle en 4 col
@@ -240,14 +287,17 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         cle_hash = hash_128bit(cle)
         print("taille de la clé: 128 bits")
         nb_tour = 10
+        round_keys = KeyExpansion(cle, 128)
     elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
         print("taille de la clé: 192 bits")
         nb_tour = 12
+        round_keys = KeyExpansion(cle, 192)
     elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
         print("taille de la clé: 256 bits")
         nb_tour = 14
+        round_keys = KeyExpansion(cle, 256)
     else:
         print("pas la bonne taille pour la clé")
         return 0
@@ -272,7 +322,6 @@ def chiffrement(texte_en_clair, cle, taille_cle):
 
     #hexadecimal correspond au texte en hexa en matrice
     
-    
     for current_matrice in hexadecimal:
         print("----------------------------------------")
         print("current matrice")
@@ -289,7 +338,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
             print("apres shiftRows", current_matrice)
             current_matrice = MixColumns(current_matrice)
             print("apres MixColumns", current_matrice)
- 
+            current_matrice = AddRoundKey128(current_matrice, round_keys[i])
 
     return current_matrice
 
