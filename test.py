@@ -85,7 +85,7 @@ def hash_128bit(cle):
     hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en MD5 de la clé
     return hash_object.hexdigest() # on retourne le résultat en hexadécimal
 
-key = hash_128bit("Ma super clé")  # clé de 128 bits
+key = hash_128bit("Ceci est ma clé secrète.")  # clé de 128 bits
 # key = [['2b','28','ab','09'], ['7e','ae','f7','cf'], ['15','d2','15','4f'], ['16','a6','88','3c']]  # exemple de clé AES 128 bits
 round_keys = KeyExpansion(key, 128)
 print("Clé de ronde 0 :")

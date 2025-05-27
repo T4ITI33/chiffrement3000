@@ -60,12 +60,12 @@ def KeyExpansion(key_hex, key_size_bits):
     w = [key_hex[i:i+8] for i in range(0, len(key_hex), 8)]
 
     for i in range(Nk, Nb * (Nr + 1)):
-        temp = w[i - 1]
+        temp = w[i - 2]
         if i % Nk == 0:
-            temp = xor_hex(SubWord(RotWord(temp)), RCON[(i // Nk) - 1])
+            temp = xor(SubWord(RotWord(temp)), RCON[(i // Nk) - 1])
         elif Nk > 6 and i % Nk == 4:
             temp = SubWord(temp)
-        w.append(xor_hex(w[i - Nk], temp))
+        w.append(xor(w[i - Nk], temp))
 
     # Convertir les mots en matrices de clé pour chaque round
     round_keys = []
@@ -94,36 +94,6 @@ def SubWord(word):
         col = int(byte[1], 16)
         result += format(S_BOX[row][col], '02x')
     return result
-
-"""calcul de la clé de tour
-cle en 4 col
-pour obtenir la col1 de la clé2 on fait un RotWord sur la col4
-(la case du haut vas en bas et toutes les autre remonte de 1)
-ensuite on fait un Subytes sur toute la col4
-ensuite on fait un xor entre la col4 la col1 et Rcon(*le nb de tour)
-cela donne la col5 (ou future col1)
-
-pour obtenir la col2 de la clé2 on fait un xor entre col2 et col5 (ou future col1)
-pour obtenir la col3 de la clé2 on fait un xor entre col3 et col6 (ou future col2)
-pour obtenir la col4 de la clé2 on fait un xor entre col4 et col7 (ou future col3)"""
-
-
-
-"""d'un point de vu de la matrice ça donne
-rotword sur col4
-subbytes sur col4
-xor entre col1 col4 et Rcon
-le resultat deviens col4, mes autres avance de 1 et col1 disparrait
-puis
-xor entre col1 et col4
-le resultat deviens col4, mes autres avance de 1 et col1 disparrait
-xor entre col1 et col4
-le resultat deviens col4, mes autres avance de 1 et col1 disparrait
-xor entre col1 et col4
-le resultat deviens col4, mes autres avance de 1 et col1 disparrait
-on a la nouvelle clé"""
-
-
 
 
 
@@ -287,17 +257,17 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         cle_hash = hash_128bit(cle)
         print("taille de la clé: 128 bits")
         nb_tour = 10
-        round_keys = KeyExpansion(cle, 128)
+        round_keys = KeyExpansion(cle_hash, 128)
     elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
         print("taille de la clé: 192 bits")
         nb_tour = 12
-        round_keys = KeyExpansion(cle, 192)
+        round_keys = KeyExpansion(cle_hash, 192)
     elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
         print("taille de la clé: 256 bits")
         nb_tour = 14
-        round_keys = KeyExpansion(cle, 256)
+        round_keys = KeyExpansion(cle_hash, 256)
     else:
         print("pas la bonne taille pour la clé")
         return 0
@@ -339,6 +309,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
             current_matrice = MixColumns(current_matrice)
             print("apres MixColumns", current_matrice)
             current_matrice = AddRoundKey128(current_matrice, round_keys[i])
+            print("apres AddRoundKey", current_matrice)
 
     return current_matrice
 
@@ -353,7 +324,11 @@ def déchiffrement(text_chiffré, clé,taille):
 def main():
     texte_a_chiffrer = "Voici un exemple de texte à chiffrer."
     cle_secrete = "Ceci est ma clé secrète."
-    chiffrement(texte_a_chiffrer, cle_secrete, 128)
+    test = chiffrement(texte_a_chiffrer, cle_secrete, 128)
+    print("\nTexte d'origine:", texte_a_chiffrer)
+    print("Clé secrète:", cle_secrete)
+    print("\nTexte chiffré:")
+    print(test)
 
 
 if __name__ == "__main__":
