@@ -131,30 +131,14 @@ def galois_multiplication(a, b):
 
 def MixColumns(state):
     new_state = [[None]*4 for _ in range(4)]
-    for j in range(4):  # Pour chaque colonne
-        for i in range(4):  # Pour chaque ligne
-            new_state[i][j] = format(
-                galois_multiplication(0x02, int(state[0][j], 16)) ^
-                galois_multiplication(0x03, int(state[1][j], 16)) ^
-                int(state[2][j], 16) ^
-                int(state[3][j], 16)
-                if i == 0 else
-                galois_multiplication(0x01, int(state[0][j], 16)) ^
-                galois_multiplication(0x02, int(state[1][j], 16)) ^
-                galois_multiplication(0x03, int(state[2][j], 16)) ^
-                int(state[3][j], 16)
-                if i == 1 else
-                galois_multiplication(0x01, int(state[0][j], 16)) ^
-                galois_multiplication(0x01, int(state[1][j], 16)) ^
-                galois_multiplication(0x02, int(state[2][j], 16)) ^
-                galois_multiplication(0x03, int(state[3][j], 16))
-                if i == 2 else
-                galois_multiplication(0x03, int(state[0][j], 16)) ^
-                galois_multiplication(0x01, int(state[1][j], 16)) ^
-                galois_multiplication(0x01, int(state[2][j], 16)) ^
-                galois_multiplication(0x02, int(state[3][j], 16)),'02x'
-            )
+    for j in range(4):
+        col = [int(state[i][j], 16) for i in range(4)]
+        new_state[0][j] = format(galois_multiplication(0x02, col[0]) ^ galois_multiplication(0x03, col[1]) ^ col[2] ^ col[3], '02x')
+        new_state[1][j] = format(col[0] ^ galois_multiplication(0x02, col[1]) ^ galois_multiplication(0x03, col[2]) ^ col[3], '02x')
+        new_state[2][j] = format(col[0] ^ col[1] ^ galois_multiplication(0x02, col[2]) ^ galois_multiplication(0x03, col[3]), '02x')
+        new_state[3][j] = format(galois_multiplication(0x03, col[0]) ^ col[1] ^ col[2] ^ galois_multiplication(0x02, col[3]), '02x')
     return new_state
+
 
 
 
@@ -272,11 +256,15 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     else:
         print("pas la bonne taille pour la clé")
         return 0
+    
+    cle_hash = '00000000000000000000000000000000'   #test
    
     print("Clé hashé:\n",cle_hash)
     cle_hash = cle_en_matrice(cle_hash)
     print("\nClé en matrice:")
     print_en_matrice(cle_hash)
+    print("cle étendue:")
+    print_en_matrice(round_keys)
  
 
 
@@ -298,7 +286,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         print("current matrice")
         print(current_matrice)
         print("cle", cle_hash)
-        current_matrice = AddRoundKey128(current_matrice, cle_hash[0])
+        current_matrice = AddRoundKey128(current_matrice, round_keys[0])
         print("apres addRoundKey")
         print(current_matrice)
         
@@ -317,9 +305,9 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         print("apres SubBytes", current_matrice)
         current_matrice = ShiftRows(current_matrice)
         print("apres shiftRows", current_matrice)
-        current_matrice = AddRoundKey128(current_matrice, round_keys[i])
+        current_matrice = AddRoundKey128(current_matrice, round_keys[nb_tour])
         print("apres AddRoundKey", current_matrice)   
-              
+
     return current_matrice
 
 
@@ -331,8 +319,8 @@ def déchiffrement(text_chiffré, clé,taille):
 
 
 def main():
-    texte_a_chiffrer = "Voici un exemple de texte à chiffrer."
-    cle_secrete = "Ceci est ma clé secrète."
+    texte_a_chiffrer = "Bonjour AES test!"
+    cle_secrete = "cleAES128bittest"
     test = chiffrement(texte_a_chiffrer, cle_secrete, 128)
     print("\nTexte d'origine:", texte_a_chiffrer)
     print("Clé secrète:", cle_secrete)
