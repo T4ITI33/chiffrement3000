@@ -20,8 +20,15 @@ def AddRoundKey128(matrice_phrase, matrice_cle):
             phrase[i][j] = xor(matrice_phrase[i][j], matrice_cle[i][j])
     return phrase
 
+def ShiftRows(state):
+    for i in range(1, 4): 
+        # print( state[i][i:])
+        # print(state[i][:i])
+        state[i] = state[i][i:] + state[i][:i]
+    return state
 
-text =[   ['56', '6f', '69', '63'],
+
+text =[         ['56', '6f', '69', '63'],
                 ['69', '20', '75', '6e'],
                 ['20', '65', '78', '65'],
                 ['6d', '70', '6c', '65']]
@@ -35,7 +42,8 @@ cle =[  ['a0', 'ea', '25', 'f1'],
         ['0c', '79', '92', '60'],
         ['d2', '27', '1f', '42']]
 
-resultat = AddRoundKey128(text, cle)
+print(text)
+resultat = ShiftRows(text)
 
 print(resultat)
 
