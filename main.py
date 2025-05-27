@@ -1,4 +1,5 @@
 import hashlib
+import copy
 
 # S-box de l'AES
 #             00    01    02    03    04    05    06    07    08    09    0A    0B    0C    0D    0E    0F
@@ -44,7 +45,7 @@ def print_en_matrice(texte):
 
 
 def AddRoundKey128(matrice_phrase, matrice_cle): 
-    phrase = matrice_phrase
+    phrase = copy.deepcopy(matrice_phrase)
     for i in range(0,4 ):
         for j in range(0,4):
             phrase[i][j] = xor(matrice_phrase[i][j], matrice_cle[i][j])
@@ -301,7 +302,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         print("apres addRoundKey")
         print(current_matrice)
         
-        for i in range(nb_tour):
+        for i in range(nb_tour - 1):
             current_matrice = SubBytes(current_matrice)
             print("apres SubBytes", current_matrice)
             current_matrice = ShiftRows(current_matrice)
@@ -311,6 +312,14 @@ def chiffrement(texte_en_clair, cle, taille_cle):
             current_matrice = AddRoundKey128(current_matrice, round_keys[i])
             print("apres AddRoundKey", current_matrice)
 
+        # Dernier tour sans MixColumns
+        current_matrice = SubBytes(current_matrice)
+        print("apres SubBytes", current_matrice)
+        current_matrice = ShiftRows(current_matrice)
+        print("apres shiftRows", current_matrice)
+        current_matrice = AddRoundKey128(current_matrice, round_keys[i])
+        print("apres AddRoundKey", current_matrice)   
+              
     return current_matrice
 
 
