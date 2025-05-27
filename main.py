@@ -87,15 +87,15 @@ def SubBytes(state):
             byte = state[i][j]
             row = int(byte[0], 16)
             col = int(byte[1], 16) 
-            print( byte , row , col)
+            # print( byte , row , col)
             state[i][j] = format(S_BOX[row][col], '02x')
     return state
 
 
 def ShiftRows(state):
     for i in range(1, 4): 
-        print( state[i][i:])
-        print(state[i][:i])
+        # print( state[i][i:])
+        # print(state[i][:i])
         state[i] = state[i][i:] + state[i][:i]
     return state
 
@@ -274,6 +274,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     
     
     for current_matrice in hexadecimal:
+        print("----------------------------------------")
         print("current matrice")
         print(current_matrice)
         print("cle", cle_hash)
@@ -286,9 +287,11 @@ def chiffrement(texte_en_clair, cle, taille_cle):
             print("apres SubBytes", current_matrice)
             current_matrice = ShiftRows(current_matrice)
             print("apres shiftRows", current_matrice)
+            current_matrice = MixColumns(current_matrice)
+            print("apres MixColumns", current_matrice)
  
 
-    return text_chiffre
+    return current_matrice
 
 
 
