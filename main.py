@@ -84,7 +84,7 @@ def KeyExpansion(key_hex, key_size_bits):
 
 def RotWord(word):
     """Rotation circulaire gauche sur un mot (4 octets en hex)"""
-    return word[2:] + word[:2]
+    return word[1:] + word[:1]
 
 def SubWord(word):
     """SubBytes sur un mot (8 caractères hex)"""
