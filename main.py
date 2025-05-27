@@ -236,20 +236,24 @@ def hash_256bit(password):
 """
 
 def chiffrement(texte_en_clair, cle, taille_cle):
+    cyper_text = []
     """ on hash la clé en fonction de la taille souhaité """
     """ pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice() """
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
+        cle_hash = '00000000000000000000000000000000'   #test
         print("taille de la clé: 128 bits")
         nb_tour = 10
         round_keys = KeyExpansion(cle_hash, 128)
     elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
+        cle_hash = '00000000000000000000000000000000'   #test
         print("taille de la clé: 192 bits")
         nb_tour = 12
         round_keys = KeyExpansion(cle_hash, 192)
     elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
+        cle_hash = '00000000000000000000000000000000'   #test
         print("taille de la clé: 256 bits")
         nb_tour = 14
         round_keys = KeyExpansion(cle_hash, 256)
@@ -257,7 +261,6 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         print("pas la bonne taille pour la clé")
         return 0
     
-    cle_hash = '00000000000000000000000000000000'   #test
    
     print("Clé hashé:\n",cle_hash)
     cle_hash = cle_en_matrice(cle_hash)
@@ -290,7 +293,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         print("apres addRoundKey")
         print(current_matrice)
         
-        for i in range(nb_tour - 1):
+        for i in range(1,nb_tour):
             current_matrice = SubBytes(current_matrice)
             print("apres SubBytes", current_matrice)
             current_matrice = ShiftRows(current_matrice)
@@ -307,8 +310,9 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         print("apres shiftRows", current_matrice)
         current_matrice = AddRoundKey128(current_matrice, round_keys[nb_tour])
         print("apres AddRoundKey", current_matrice)   
+        cyper_text.append(current_matrice)
 
-    return current_matrice
+    return cyper_text
 
 
 
