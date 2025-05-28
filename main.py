@@ -3,29 +3,27 @@ import copy
 
 # S-box de l'AES
 #             00    01    02    03    04    05    06    07    08    09    0A    0B    0C    0D    0E    0F
-S_BOX = [   [0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76], 
-            [0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0],
-            [0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15],
-            [0x04, 0xC7, 0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, 0xEB, 0x27, 0xB2, 0x75],
-            [0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, 0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84],
-            [0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, 0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF],
-            [0xD0, 0xEF, 0xAA, 0xFB, 0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, 0x9F, 0xA8],
-            [0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, 0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2],
-            [0xCD, 0x0C, 0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, 0x64, 0x5D, 0x19, 0x73],
-            [0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, 0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB],
-            [0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, 0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79],
-            [0xE7, 0xC8, 0x37, 0x6D, 0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, 0xAE, 0x08],
-            [0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, 0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A],
-            [0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E],
-            [0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF],
-            [0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16]
-
+# S-box AES standard
+Sbox = [
+    '63', '7c', '77', '7b', 'f2', '6b', '6f', 'c5', '30', '01', '67', '2b', 'fe', 'd7', 'ab', '76',
+    'ca', '82', 'c9', '7d', 'fa', '59', '47', 'f0', 'ad', 'd4', 'a2', 'af', '9c', 'a4', '72', 'c0',
+    'b7', 'fd', '93', '26', '36', '3f', 'f7', 'cc', '34', 'a5', 'e5', 'f1', '71', 'd8', '31', '15',
+    '04', 'c7', '23', 'c3', '18', '96', '05', '9a', '07', '12', '80', 'e2', 'eb', '27', 'b2', '75',
+    '09', '83', '2c', '1a', '1b', '6e', '5a', 'a0', '52', '3b', 'd6', 'b3', '29', 'e3', '2f', '84',
+    '53', 'd1', '00', 'ed', '20', 'fc', 'b1', '5b', '6a', 'cb', 'be', '39', '4a', '4c', '58', 'cf',
+    'd0', 'ef', 'aa', 'fb', '43', '4d', '33', '85', '45', 'f9', '02', '7f', '50', '3c', '9f', 'a8',
+    '51', 'a3', '40', '8f', '92', '9d', '38', 'f5', 'bc', 'b6', 'da', '21', '10', 'ff', 'f3', 'd2',
+    'cd', '0c', '13', 'ec', '5f', '97', '44', '17', 'c4', 'a7', '7e', '3d', '64', '5d', '19', '73',
+    '60', '81', '4f', 'dc', '22', '2a', '90', '88', '46', 'ee', 'b8', '14', 'de', '5e', '0b', 'db',
+    'e0', '32', '3a', '0a', '49', '06', '24', '5c', 'c2', 'd3', 'ac', '62', '91', '95', 'e4', '79',
+    'e7', 'c8', '37', '6d', '8d', 'd5', '4e', 'a9', '6c', '56', 'f4', 'ea', '65', '7a', 'ae', '08',
+    'ba', '78', '25', '2e', '1c', 'a6', 'b4', 'c6', 'e8', 'dd', '74', '1f', '4b', 'bd', '8b', '8a',
+    '70', '3e', 'b5', '66', '48', '03', 'f6', '0e', '61', '35', '57', 'b9', '86', 'c1', '1d', '9e',
+    'e1', 'f8', '98', '11', '69', 'd9', '8e', '94', '9b', '1e', '87', 'e9', 'ce', '55', '28', 'df',
+    '8c', 'a1', '89', '0d', 'bf', 'e6', '42', '68', '41', '99', '2d', '0f', 'b0', '54', 'bb', '16'
 ]
 
-RCON = [
-    "01000000", "02000000", "04000000", "08000000", "10000000",
-    "20000000", "40000000", "80000000", "1b000000", "36000000"
-]
+RCON = ['01', '02', '04', '08', '10', '20', '40', '80', '1b', '36', '6c', 'd8', 'ab', '4d', '9a']
 
 matrice_mixColumns = [
       [0x02, 0x03, 0x01, 0x01],
@@ -53,48 +51,51 @@ def AddRoundKey128(matrice_phrase, matrice_cle):
 
 def KeyExpansion(key_hex, key_size_bits):
     """Génère toutes les clés de tour en AES pour des clés 128, 192 ou 256 bits"""
-    Nb = 4  # nombre de colonnes de l'état
-    Nk = key_size_bits // 32  # nombre de mots dans la clé d'origine
-    Nr = {128: 10, 192: 12, 256: 14}[key_size_bits]  # nombre de tours
+    
+    print("test",key_hex)
+    if key_size_bits == 128:
+        Nk = 4
+        Nr = 10
+    elif key_size_bits == 192:
+        Nk = 6
+        Nr = 12
+    elif key_size_bits == 256:
+        Nk = 8
+        Nr = 14
+    else:
+        raise ValueError("Invalid key length. Expected 16, 24, or 32 bytes.")
 
-    # Séparer la clé de départ en mots de 4 octets (8 caractères hex)
-    w = [key_hex[i:i+8] for i in range(0, len(key_hex), 8)]
+    Nb = 4  
+    w = []
+
+    # Initial key schedule
+    for i in range(Nk):
+        w.append(key_hex[4*i:4*i+4])
 
     for i in range(Nk, Nb * (Nr + 1)):
-        temp = w[i - 2]
+        temp = w[i - 1]
         if i % Nk == 0:
-            temp = xor(SubWord(RotWord(temp)), RCON[(i // Nk) - 1])
+            temp = SubWord(RotWord(temp))
+            temp[0] = format(int(temp[0], 16) ^ int(RCON[i // Nk - 1], 16), '02x')
         elif Nk > 6 and i % Nk == 4:
             temp = SubWord(temp)
-        w.append(xor(w[i - Nk], temp))
+        w.append(xor_words(w[i - Nk], temp))
 
-    # Convertir les mots en matrices de clé pour chaque round
-    round_keys = []
-    for r in range(Nr + 1):
-        round_key = [[None for _ in range(4)] for _ in range(4)]
-        for c in range(4):  # 4 colonnes
-            word = w[r * 4 + c]
-            for l in range(4):  # 4 lignes
-                round_key[l][c] = word[2 * l:2 * l + 2]
-        round_keys.append(round_key)
-    
-    return round_keys
+    return w
 
 
 
+# SubWord applies Sbox to each byte
+def SubWord(word):
+    return [Sbox[int(b, 16)] for b in word]
+
+# RotWord rotates word left by one byte
 def RotWord(word):
-    """Rotation circulaire gauche sur un mot (4 octets en hex)"""
     return word[1:] + word[:1]
 
-def SubWord(word):
-    """SubBytes sur un mot (8 caractères hex)"""
-    result = ""
-    for i in range(0, len(word), 2):
-        byte = word[i:i+2]
-        row = int(byte[0], 16)
-        col = int(byte[1], 16)
-        result += format(S_BOX[row][col], '02x')
-    return result
+# XOR between two words
+def xor_words(w1, w2):
+    return [format(int(a, 16) ^ int(b, 16), '02x') for a, b in zip(w1, w2)]
 
 
 
@@ -242,21 +243,25 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
         cle_hash = '00000000000000000000000000000000'   #test
+        key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
+        print("test",key_bytes)
         print("taille de la clé: 128 bits")
         nb_tour = 10
-        round_keys = KeyExpansion(cle_hash, 128)
+        round_keys = KeyExpansion(key_bytes, 128)
     elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
         cle_hash = '00000000000000000000000000000000'   #test
+        key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
         print("taille de la clé: 192 bits")
         nb_tour = 12
-        round_keys = KeyExpansion(cle_hash, 192)
+        round_keys = KeyExpansion(key_bytes, 192)
     elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
         cle_hash = '00000000000000000000000000000000'   #test
+        key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
         print("taille de la clé: 256 bits")
         nb_tour = 14
-        round_keys = KeyExpansion(cle_hash, 256)
+        round_keys = KeyExpansion(key_bytes, 256)
     else:
         print("pas la bonne taille pour la clé")
         return 0
@@ -267,7 +272,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     print("\nClé en matrice:")
     print_en_matrice(cle_hash)
     print("cle étendue:")
-    print_en_matrice(round_keys)
+    print(round_keys)
  
 
 
