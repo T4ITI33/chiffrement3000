@@ -133,10 +133,28 @@ def SubBytes(state):
 
 
 def ShiftRows(state):
-    for i in range(1, 4): 
-        # print( state[i][i:])
-        # print(state[i][:i])
-        state[i] = state[i][i:] + state[i][:i]
+    state[0][0] = state[0][0]  
+    tmp1 = state[0][1]
+    state[0][1] = state[1][1]
+    tmp2 = state[0][2]
+    state[0][2] = state[2][2]
+    tmp3 = state[0][3]
+    state[0][3] = state[3][3]
+    state[1][0] = state[1][0]
+    state[1][1] = state[2][1]
+    tmp4 = state[1][2]
+    state[1][2] = state[3][2]
+    tmp5 = state[1][3]
+    state[1][3] = tmp3
+    state[2][0] = state[2][0]
+    state[2][1] = state[3][1]
+    state[2][2] = tmp2
+    tmp6 = state[2][3]
+    state[2][3] = tmp5
+    state[3][0] = state[3][0]
+    state[3][1] = tmp1
+    state[3][2] = tmp4
+    state[3][3] = tmp6
     return state
 
 def galois_multiplication(a, b):
