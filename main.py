@@ -220,7 +220,6 @@ def cle_en_matrice(phrase, taille_bloc=32):
 """ cette fonction transforme chaque caractere d'une matrice en hexadécimal. """
 def matrice_en_hexa(text):
     hex_matrice = [[format(ord(char), '02x') for char in row] for row in text]
-    hex_matrice = [["00","00","01","01"], ["03","03","07","07"], ["0f","0f","1f","1f"], ["3f","3f","7f","7f"]]
     return hex_matrice
 
 """ cette fonction appel matrice_en_hexa pour chaque matrice d'un texte """
@@ -368,8 +367,8 @@ def déchiffrement(text_chiffré, clé,taille):
 
 
 def main():
-    texte_a_chiffrer = "test"
-    cle_secrete = "cleAES128bittest"
+    texte_a_chiffrer = "test de chiffrement AES avec une clé de 128 bits"
+    cle_secrete = "1111111111111111"
     test = chiffrement(texte_a_chiffrer, cle_secrete, 128)
     print("\nTexte d'origine:", texte_a_chiffrer)
     print("Clé secrète:", cle_secrete)
