@@ -157,27 +157,28 @@ def ShiftRows(state):
     state[3][3] = tmp6
     return state
 
-def galois_multiplication(a, b):
-    result = 0
-    for _ in range(8):
-        if b & 1:
-            result ^= a
-        high_bit_set = a & 0x80
-        a = (a << 1) & 0xFF
-        if high_bit_set:
-            a ^= 0x1B  # x^8 + x^4 + x^3 + x + 1
-        b >>= 1
-    return result
+def galois_multiplication(x):
+    return ((x << 1) ^ 0x1b) & 0xFF if (x & 0x80) else (x << 1) & 0xFF
 
-def MixColumns(state):
-    new_state = [[None]*4 for _ in range(4)]
-    for j in range(4):
-        col = [int(state[i][j], 16) for i in range(4)]
-        new_state[0][j] = format(galois_multiplication(0x02, col[0]) ^ galois_multiplication(0x03, col[1]) ^ col[2] ^ col[3], '02x')
-        new_state[1][j] = format(col[0] ^ galois_multiplication(0x02, col[1]) ^ galois_multiplication(0x03, col[2]) ^ col[3], '02x')
-        new_state[2][j] = format(col[0] ^ col[1] ^ galois_multiplication(0x02, col[2]) ^ galois_multiplication(0x03, col[3]), '02x')
-        new_state[3][j] = format(galois_multiplication(0x03, col[0]) ^ col[1] ^ col[2] ^ galois_multiplication(0x02, col[3]), '02x')
-    return new_state
+def mixColumns(matrix):
+    # Aplatir la matrice en une liste d'entiers
+    state = [int(cell, 16) for row in matrix for cell in row]
+
+    for i in range(4):
+        idx = i * 4
+        a = state[idx]
+        b = state[idx + 1]
+        c = state[idx + 2]
+        d = state[idx + 3]
+
+        state[idx]     = galois_multiplication(a) ^ galois_multiplication(b) ^ b ^ c ^ d
+        state[idx + 1] = a ^ galois_multiplication(b) ^ galois_multiplication(c) ^ c ^ d
+        state[idx + 2] = a ^ b ^ galois_multiplication(c) ^ galois_multiplication(d) ^ d
+        state[idx + 3] = galois_multiplication(a) ^ a ^ b ^ c ^ galois_multiplication(d)
+
+    # Reformater en matrice 4x4 de chaînes hexadécimales
+    new_matrix = [[f'{state[row * 4 + col]:02x}' for col in range(4)] for row in range(4)]
+    return new_matrix
 
 
 
@@ -282,21 +283,18 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     """ pour la clé il faut d'abord la transformer en hexa avec la fonction de hash puis la mettre en matrice avec cle_en_matrice() """
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
-        cle_hash = '00000000000000000000000000000000'   #test
         key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
         print("taille de la clé: 128 bits")
         nb_tour = 10
         round_keys = KeyExpansion(key_bytes, 128)
     elif taille_cle == 192:
         cle_hash = hash_192bit(cle)
-        cle_hash = '00000000000000000000000000000000'   #test
         key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
         print("taille de la clé: 192 bits")
         nb_tour = 12
         round_keys = KeyExpansion(key_bytes, 192)
     elif taille_cle == 256:
         cle_hash = hash_256bit(cle)
-        cle_hash = '00000000000000000000000000000000'   #test
         key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
         print("taille de la clé: 256 bits")
         nb_tour = 14
@@ -344,7 +342,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
             print("apres SubBytes", current_matrice)
             current_matrice = ShiftRows(current_matrice)
             print("apres shiftRows", current_matrice)
-            current_matrice = MixColumns(current_matrice)
+            current_matrice = mixColumns(current_matrice)
             print("apres MixColumns", current_matrice)
             current_matrice = AddRoundKey128(current_matrice, round_keys[i * 4 : (i + 1) * 4])
             print("apres AddRoundKey", current_matrice)
