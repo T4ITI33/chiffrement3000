@@ -58,6 +58,13 @@ def print_en_matrice(texte):
             print(ligne)
         print("\n")
 
+def matrice_to_hexa(blocks):
+    # Concatène tous les hex en une seule liste plate
+    flat_hex = [byte for block in blocks for row in block for byte in row]
+    
+    # Rejoint tous les hex en une seule chaîne
+    return ''.join(flat_hex)
+
 """ les 4 fonctions principales """
 
 
@@ -392,7 +399,8 @@ def main():
     print("Texte d'origine:", texte_a_chiffrer)
     print("Clé secrète:", cle_secrete)
     print("\nTexte chiffré:")
-    print_en_matrice(test)
+    test = matrice_to_hexa(test)
+    print(test)
 
 
 if __name__ == "__main__":
