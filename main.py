@@ -389,6 +389,16 @@ def déchiffrement(text_chiffré, clé,taille_cle):
         return 0
 
     plain_text = AddRoundKey128(text_chiffré, round_keys[nb_tour * 4 : (nb_tour + 1) * 4])
+    for i in range(nb_tour - 1, -1, -1):
+        plain_text = InvShiftRows(plain_text)
+        plain_text = InvSubBytes(plain_text)
+        plain_text = AddRoundKey128(plain_text, round_keys[i * 4 : (i + 1) * 4])
+        plain_text = InvMixColumns(plain_text)
+    
+    plain_text = InvShiftRows(plain_text)
+    plain_text = InvSubBytes(plain_text)
+    plain_text = AddRoundKey128(plain_text, round_keys[0:4])
+
     return plain_text
 
 

@@ -1,32 +1,116 @@
-def blocks_to_text(blocks):
-    # Concatène tous les hex en une seule liste plate
-    flat_hex = [byte for block in blocks for row in block for byte in row]
-    
-    # Convertit chaque hex en entier, puis crée des bytes
-    byte_array = bytes(int(h, 16) for h in flat_hex)
-
-    # Décode en UTF-8 en ignorant les erreurs non imprimables
-    try:
-        return byte_array.decode('utf-8')
-    except UnicodeDecodeError:
-        # Si certains caractères ne sont pas UTF-8 valides, affiche en latin-1
-        return byte_array.decode('latin-1', errors='replace')
-
-
-def blocks_to_hex_string(blocks):
-    # Concatène tous les hex en une seule liste plate
-    flat_hex = [byte for block in blocks for row in block for byte in row]
-    
-    # Rejoint tous les hex en une seule chaîne
-    return ''.join(flat_hex)
-
-
-aes_output = [
-    [['75', 'a6', 'e3', 'de'], ['cd', '98', '96', '9e'], ['ef', 'cd', 'd9', '22'], ['cc', '34', '69', '75']],
-    [['5d', '2e', 'e3', 'f1'], ['b9', 'a0', '41', '58'], ['c5', '20', '62', '01'], ['d3', '39', 'b4', 'f9']],
-    [['ad', '0f', 'b5', '17'], ['be', '98', '37', 'dd'], ['f2', '74', 'e4', 'da'], ['7c', '1b', '5b', '78']]
+# S-box inverse AES (en hexadécimal)
+inv_sbox = [
+    0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
+    0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
+    0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
+    0x08, 0x2e, 0xa1, 0x66, 0x28, 0xd9, 0x24, 0xb2, 0x76, 0x5b, 0xa2, 0x49, 0x6d, 0x8b, 0xd1, 0x25,
+    0x72, 0xf8, 0xf6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xd4, 0xa4, 0x5c, 0xcc, 0x5d, 0x65, 0xb6, 0x92,
+    0x6c, 0x70, 0x48, 0x50, 0xfd, 0xed, 0xb9, 0xda, 0x5e, 0x15, 0x46, 0x57, 0xa7, 0x8d, 0x9d, 0x84,
+    0x90, 0xd8, 0xab, 0x00, 0x8c, 0xbc, 0xd3, 0x0a, 0xf7, 0xe4, 0x58, 0x05, 0xb8, 0xb3, 0x45, 0x06,
+    0xd0, 0x2c, 0x1e, 0x8f, 0xca, 0x3f, 0x0f, 0x02, 0xc1, 0xaf, 0xbd, 0x03, 0x01, 0x13, 0x8a, 0x6b,
+    0x3a, 0x91, 0x11, 0x41, 0x4f, 0x67, 0xdc, 0xea, 0x97, 0xf2, 0xcf, 0xce, 0xf0, 0xb4, 0xe6, 0x73,
+    0x96, 0xac, 0x74, 0x22, 0xe7, 0xad, 0x35, 0x85, 0xe2, 0xf9, 0x37, 0xe8, 0x1c, 0x75, 0xdf, 0x6e,
+    0x47, 0xf1, 0x1a, 0x71, 0x1d, 0x29, 0xc5, 0x89, 0x6f, 0xb7, 0x62, 0x0e, 0xaa, 0x18, 0xbe, 0x1b,
+    0xfc, 0x56, 0x3e, 0x4b, 0xc6, 0xd2, 0x79, 0x20, 0x9a, 0xdb, 0xc0, 0xfe, 0x78, 0xcd, 0x5a, 0xf4,
+    0x1f, 0xdd, 0xa8, 0x33, 0x88, 0x07, 0xc7, 0x31, 0xb1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xec, 0x5f,
+    0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef,
+    0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61,
+    0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d,
 ]
 
-hex_string = blocks_to_hex_string(aes_output)
-print(hex_string)
+def inv_sub_bytes(state):
+    return [[inv_sbox[byte] for byte in row] for row in state]
 
+
+def inv_shift_rows(state):
+    return [
+        state[0],
+        state[1][-1:] + state[1][:-1],
+        state[2][-2:] + state[2][:-2],
+        state[3][-3:] + state[3][:-3],
+    ]
+
+
+def xtime(a):
+    return ((a << 1) ^ 0x1b) & 0xFF if a & 0x80 else (a << 1) & 0xFF
+
+def mul(a, b):
+    """Galois field multiplication in GF(2^8)"""
+    p = 0
+    for _ in range(8):
+        if b & 1:
+            p ^= a
+        hi_bit = a & 0x80
+        a = (a << 1) & 0xFF
+        if hi_bit:
+            a ^= 0x1b
+        b >>= 1
+    return p
+
+def inv_mix_columns(state):
+    for i in range(4):
+        s0, s1, s2, s3 = [state[row][i] for row in range(4)]
+        state[0][i] = mul(s0, 0x0e) ^ mul(s1, 0x0b) ^ mul(s2, 0x0d) ^ mul(s3, 0x09)
+        state[1][i] = mul(s0, 0x09) ^ mul(s1, 0x0e) ^ mul(s2, 0x0b) ^ mul(s3, 0x0d)
+        state[2][i] = mul(s0, 0x0d) ^ mul(s1, 0x09) ^ mul(s2, 0x0e) ^ mul(s3, 0x0b)
+        state[3][i] = mul(s0, 0x0b) ^ mul(s1, 0x0d) ^ mul(s2, 0x09) ^ mul(s3, 0x0e)
+    return state
+
+def add_round_key(matrice_phrase, matrice_cle):
+    phrase = copy.deepcopy(matrice_phrase)
+    for i in range(0,4 ):
+        for j in range(0,4):
+            phrase[i][j] = xor(matrice_phrase[i][j], matrice_cle[i][j])
+    return phrase
+
+def KeyExpansion(key_hex, key_size_bits):
+    """Génère toutes les clés de tour en AES pour des clés 128, 192 ou 256 bits"""
+    
+    if key_size_bits == 128:
+        Nk = 4
+        Nr = 10
+    elif key_size_bits == 192:
+        Nk = 6
+        Nr = 12
+    elif key_size_bits == 256:
+        Nk = 8
+        Nr = 14
+    else:
+        raise ValueError("Invalid key length. Expected 16, 24, or 32 bytes.")
+
+    Nb = 4  
+    w = []
+
+    # Initial key schedule
+    for i in range(Nk):
+        w.append(key_hex[4*i:4*i+4])
+
+    for i in range(Nk, Nb * (Nr + 1)):
+        temp = w[i - 1]
+        if i % Nk == 0:
+            temp = SubWord(RotWord(temp))
+            temp[0] = format(int(temp[0], 16) ^ int(RCON[i // Nk - 1], 16), '02x')
+        elif Nk > 6 and i % Nk == 4:
+            temp = SubWord(temp)
+        w.append(xor_words(w[i - Nk], temp))
+
+    return w
+
+
+
+
+state = [["c7", "d1", "24", "19"], ["48", "9e", "3b", "62"], ["33", "a2", "c5", "a7"], ["f4", "56", "31", "72"]]
+
+key = [["00", "00", "00", "00"], ["00", "00", "00", "00"], ["00", "00", "00", "00"], ["00", "00", "00", "00"]]
+round_keys = KeyExpansion(key)
+
+state = add_round_key(state, last_round_key)
+for round in reversed(range(1, 10)):
+    state = inv_shift_rows(state)
+    state = inv_sub_bytes(state)
+    state = add_round_key(state, round_keys[round])
+    state = inv_mix_columns(state)
+# Dernier tour (sans inv_mix_columns)
+state = inv_shift_rows(state)
+state = inv_sub_bytes(state)
+state = add_round_key(state, round_keys[0])
