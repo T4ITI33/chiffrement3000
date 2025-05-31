@@ -1,33 +1,26 @@
-def galois_multiplication(x):
-    return ((x << 1) ^ 0x1b) & 0xFF if (x & 0x80) else (x << 1) & 0xFF
+def blocks_to_text(blocks):
+    # Concatène tous les hex en une seule liste plate
+    flat_hex = [byte for block in blocks for row in block for byte in row]
+    
+    # Convertit chaque hex en entier, puis crée des bytes
+    byte_array = bytes(int(h, 16) for h in flat_hex)
 
-def mixColumns(matrix):
-    # Aplatir la matrice en une liste d'entiers
-    state = [int(cell, 16) for row in matrix for cell in row]
+    # Décode en UTF-8 en ignorant les erreurs non imprimables
+    try:
+        return byte_array.decode('utf-8')
+    except UnicodeDecodeError:
+        # Si certains caractères ne sont pas UTF-8 valides, affiche en latin-1
+        return byte_array.decode('latin-1', errors='replace')
+def blocks_to_hex_string(blocks):
+    # Concatène tous les hex en une seule liste plate
+    flat_hex = [byte for block in blocks for row in block for byte in row]
+    
+    # Rejoint tous les hex en une seule chaîne
+    return ''.join(flat_hex)
 
-    for i in range(4):
-        idx = i * 4
-        a = state[idx]
-        b = state[idx + 1]
-        c = state[idx + 2]
-        d = state[idx + 3]
 
-        state[idx]     = galois_multiplication(a) ^ galois_multiplication(b) ^ b ^ c ^ d
-        state[idx + 1] = a ^ galois_multiplication(b) ^ galois_multiplication(c) ^ c ^ d
-        state[idx + 2] = a ^ b ^ galois_multiplication(c) ^ galois_multiplication(d) ^ d
-        state[idx + 3] = galois_multiplication(a) ^ a ^ b ^ c ^ galois_multiplication(d)
 
-    # Reformater en matrice 4x4 de chaînes hexadécimales
-    new_matrix = [[f'{state[row * 4 + col]:02x}' for col in range(4)] for row in range(4)]
-    return new_matrix
+text_chiffre = [[['75', 'a6', 'e3', 'de'], ['cd', '98', '96', '9e'], ['ef', 'cd', 'd9', '22'], ['cc', '34', '69', '75']], [['5d', '2e', 'e3', 'f1'], ['b9', 'a0', '41', '58'], ['c5', '20', '62', '01'], ['d3', '39', 'b4', 'f9']], [['ad', '0f', 'b5', '17'], ['be', '98', '37', 'dd'], ['f2', '74', 'e4', 'da'], ['7c', '1b', '5b', '78']]]
 
-input_matrix = [
-    ['63', '7b', 'c0', 'd2'],
-    ['7b', '76', 'd2', '7c'],
-    ['76', '75', '7c', 'c5'],
-    ['75', '63', 'c5', 'c0']
-]
-
-result_matrix = mixColumns(input_matrix)
-
-print(result_matrix)
+test = blocks_to_hex_string(text_chiffre)
+print(test)

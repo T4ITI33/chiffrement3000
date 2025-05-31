@@ -2,8 +2,6 @@ import hashlib
 import copy
 
 # S-box de l'AES
-#             00    01    02    03    04    05    06    07    08    09    0A    0B    0C    0D    0E    0F
-# S-box AES standard
 Sbox = [
     '63', '7c', '77', '7b', 'f2', '6b', '6f', 'c5', '30', '01', '67', '2b', 'fe', 'd7', 'ab', '76',
     'ca', '82', 'c9', '7d', 'fa', '59', '47', 'f0', 'ad', 'd4', 'a2', 'af', '9c', 'a4', '72', 'c0',
@@ -41,7 +39,6 @@ S_BOX = [   [0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0
             [0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E],
             [0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF],
             [0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16]
-
 ]
 
 
@@ -313,7 +310,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
 
 
     """ pour le texte il faut d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
-    print("Texte normal:\n",texte_en_clair)
+    print("\nTexte normal:\n",texte_en_clair)
 
     texte_matrice = texte_en_matrice(texte_en_clair) 
     print("\nTexte en matrice:")
@@ -322,38 +319,37 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     hexadecimal = texte_en_hexa(texte_matrice)
     print("Texte en hexadécimal:\n")
     print_en_matrice(hexadecimal)
-    print(hexadecimal)
 
     #hexadecimal correspond au texte en hexa en matrice
     
     for current_matrice in hexadecimal:
-        print("----------------------------------------")
-        print("current matrice")
-        print(current_matrice)
-        print("cle", cle_hash)
+        # print("----------------------------------------") #test
+        # print("current matrice") #test
+        # print(current_matrice) #test
+        # print("cle", cle_hash) #test
         current_matrice = AddRoundKey128(current_matrice, round_keys[0:4])
-        print("apres addRoundKey")
-        print(current_matrice)
+        # print("apres addRoundKey") #test
+        # print(current_matrice) #test
         
         for i in range(1,nb_tour):
-            print("début tour", i)
+            # print("début tour", i) #test
             current_matrice = SubBytes(current_matrice)
-            print("apres SubBytes", current_matrice)
+            # print("apres SubBytes", current_matrice) #test
             current_matrice = ShiftRows(current_matrice)
-            print("apres shiftRows", current_matrice)
+            # print("apres shiftRows", current_matrice) #test
             current_matrice = mixColumns(current_matrice)
-            print("apres MixColumns", current_matrice)
+            # print("apres MixColumns", current_matrice) #test
             current_matrice = AddRoundKey128(current_matrice, round_keys[i * 4 : (i + 1) * 4])
-            print("apres AddRoundKey", current_matrice)
-            print("fin tour", i)
+            # print("apres AddRoundKey", current_matrice) #test
+            # print("fin tour", i) #test
 
         # Dernier tour sans MixColumns
         current_matrice = SubBytes(current_matrice)
-        print("apres SubBytes", current_matrice)
+        # print("apres SubBytes", current_matrice) #test
         current_matrice = ShiftRows(current_matrice)
-        print("apres shiftRows", current_matrice)
+        # print("apres shiftRows", current_matrice) #test 
         current_matrice = AddRoundKey128(current_matrice, round_keys[nb_tour * 4 : (nb_tour + 1) * 4])
-        print("apres AddRoundKey", current_matrice)   
+        # print("apres AddRoundKey", current_matrice)  #test 
         cyper_text.append(current_matrice)
 
     return cyper_text
@@ -361,19 +357,42 @@ def chiffrement(texte_en_clair, cle, taille_cle):
 
 
 #fonction de déchiffrement
-def déchiffrement(text_chiffré, clé,taille):
-    # return text_dechiffre   
-    return 0
+def déchiffrement(text_chiffré, clé,taille_cle):
+
+    if taille_cle == 128:
+        cle_hash = hash_128bit(cle)
+        key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
+        print("taille de la clé: 128 bits")
+        nb_tour = 10
+        round_keys = KeyExpansion(key_bytes, 128)
+    elif taille_cle == 192:
+        cle_hash = hash_192bit(cle)
+        key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
+        print("taille de la clé: 192 bits")
+        nb_tour = 12
+        round_keys = KeyExpansion(key_bytes, 192)
+    elif taille_cle == 256:
+        cle_hash = hash_256bit(cle)
+        key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
+        print("taille de la clé: 256 bits")
+        nb_tour = 14
+        round_keys = KeyExpansion(key_bytes, 256)
+    else:
+        print("pas la bonne taille pour la clé")
+        return 0
+
+    plain_text = AddRoundKey128(text_chiffré, round_keys[nb_tour * 4 : (nb_tour + 1) * 4])
+    return plain_text
 
 
 def main():
     texte_a_chiffrer = "test de chiffrement AES avec une clé de 128 bits"
-    cle_secrete = "1111111111111111"
+    cle_secrete = "cle128bittest"
     test = chiffrement(texte_a_chiffrer, cle_secrete, 128)
-    print("\nTexte d'origine:", texte_a_chiffrer)
+    print("Texte d'origine:", texte_a_chiffrer)
     print("Clé secrète:", cle_secrete)
     print("\nTexte chiffré:")
-    print(test)
+    print_en_matrice(test)
 
 
 if __name__ == "__main__":
