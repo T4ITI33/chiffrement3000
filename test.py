@@ -1,6 +1,11 @@
 import hashlib
 import copy
 
+
+def hexa_to_text(hex_string):
+    return bytes.fromhex(hex_string).decode('latin-1')
+
+
 """ cette fonction retourne le hash de 128 bits pour la clé en utilisant MD5 """
 def hash_128bit(cle):
     hash_object = hashlib.md5(cle.encode()) # on met dans 'hash_object' le hash en MD5 de la clé
@@ -160,12 +165,28 @@ def inv_shift_rows(state):
     ]
 
 def InvShiftRows(state):
-    return [
-        state[0],
-        state[1][-1:] + state[1][:-1],
-        state[2][-2:] + state[2][:-2],
-        state[3][-3:] + state[3][:-3],
-    ]
+    state[0][0] = state[0][0]  # inchangé
+    tmp1 = state[3][1]
+    state[3][1] = state[2][1]
+    state[2][1] = state[1][1]
+    state[1][1] = state[0][1]
+    state[0][1] = tmp1
+
+    tmp2 = state[2][2]
+    state[2][2] = state[0][2]
+    state[0][2] = tmp2
+    tmp3 = state[3][2]
+    state[3][2] = state[1][2]
+    state[1][2] = tmp3
+
+    tmp4 = state[1][3]
+    state[1][3] = state[2][3]
+    state[2][3] = state[3][3]
+    state[3][3] = state[0][3]
+    state[0][3] = tmp4
+
+    return state
+
 
 def galois_multiplication(x):
     return ((x << 1) ^ 0x1b) & 0xFF if (x & 0x80) else (x << 1) & 0xFF
@@ -216,6 +237,7 @@ def déchiffrement(text_chiffre, cle,taille_cle):
 
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
+        # cle_hash = "00000000000000000000000000000000" #test
         key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
         print("taille de la clé: 128 bits")
         nb_tour = 10
@@ -246,23 +268,32 @@ def déchiffrement(text_chiffre, cle,taille_cle):
 
     print("\nTexte chiffré:", text_chiffre)
 
-    plain_text = texte_en_matrice(text_chiffre,32)
+    text_chiffre = texte_en_matrice(text_chiffre,32)
     print("\nTexte en matrice:")
-    print_en_matrice(plain_text)
+    print_en_matrice(text_chiffre)
 
-    for current_matrice in plain_text:
+    for current_matrice in text_chiffre:
+        print("matriche initiale:")
+        print(current_matrice)
+        text_chiffre = AddRoundKey128(current_matrice, round_keys[nb_tour * 4 : (nb_tour + 1) * 4])
+        print("\nAprès AddRoundKey:", text_chiffre)
+
+        for i in range(nb_tour - 1, 0, -1):
+            print("\nTour:", i + 1)
+            text_chiffre = InvShiftRows(text_chiffre)
+            # print("\nAprès InvShiftRows:", text_chiffre) #test
+            text_chiffre = InvSubBytes(text_chiffre) 
+            # print("\nAprès InvSubBytes:", text_chiffre) #test
+            text_chiffre = AddRoundKey128(text_chiffre, round_keys[i * 4 : (i + 1) * 4])
+            # print("\nAprès AddRoundKey:", text_chiffre) #test
+            text_chiffre = InvMixColumns(text_chiffre)
+            # print("\nAprès InvMixColumns:", text_chiffre) #test 
         
-        plain_text = AddRoundKey128(current_matrice, round_keys[nb_tour * 4 : (nb_tour + 1) * 4])
-    
-        for i in range(nb_tour - 1, -1, -1):
-            plain_text = InvShiftRows(plain_text)
-            plain_text = InvSubBytes(plain_text)
-            plain_text = AddRoundKey128(plain_text, round_keys[i * 4 : (i + 1) * 4])
-            plain_text = InvMixColumns(plain_text)
-        
-        plain_text = InvShiftRows(plain_text)
-        plain_text = InvSubBytes(plain_text)
-        plain_text = AddRoundKey128(plain_text, round_keys[0:4])
+        print("\nTour: 1")
+        text_chiffre = InvShiftRows(text_chiffre)
+        text_chiffre = InvSubBytes(text_chiffre)
+        text_chiffre = AddRoundKey128(text_chiffre, round_keys[0:4])
+        plain_text.append(text_chiffre)
 
     return plain_text
 
@@ -274,10 +305,10 @@ def main():
     cle_secrete = "cle128bittest"
     # Déchiffrement
     texte_dechiffre = déchiffrement(test, cle_secrete, 128)
+    texte_dechiffre = matrice_to_hexa(texte_dechiffre)
+    texte_dechiffre = hexa_to_text(texte_dechiffre)
     print("\nTexte déchiffré:")
     print(texte_dechiffre)
-    texte_dechiffre = matrice_to_hexa(texte_dechiffre)
-    print("2:",texte_dechiffre)
 
 
 if __name__ == "__main__":
