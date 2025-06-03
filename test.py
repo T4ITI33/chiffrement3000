@@ -156,13 +156,6 @@ def InvSubBytes(state):
     return [[format(inv_sbox[int(byte, 16)], '02x') for byte in row] for row in state]
 
 
-def inv_shift_rows(state):
-    return [
-        state[0],
-        state[1][-1:] + state[1][:-1],
-        state[2][-2:] + state[2][:-2],
-        state[3][-3:] + state[3][:-3],
-    ]
 
 def InvShiftRows(state):
     state[0][0] = state[0][0]  # inchangé
@@ -273,13 +266,13 @@ def déchiffrement(text_chiffre, cle,taille_cle):
     print_en_matrice(text_chiffre)
 
     for current_matrice in text_chiffre:
-        print("matriche initiale:")
-        print(current_matrice)
+        # print("matriche initiale:") #test 
+        # print(current_matrice) #test
         text_chiffre = AddRoundKey128(current_matrice, round_keys[nb_tour * 4 : (nb_tour + 1) * 4])
-        print("\nAprès AddRoundKey:", text_chiffre)
+        # print("\nAprès AddRoundKey:", text_chiffre) #test
 
         for i in range(nb_tour - 1, 0, -1):
-            print("\nTour:", i + 1)
+            # print("\nTour:", i + 1) #test
             text_chiffre = InvShiftRows(text_chiffre)
             # print("\nAprès InvShiftRows:", text_chiffre) #test
             text_chiffre = InvSubBytes(text_chiffre) 
@@ -289,7 +282,7 @@ def déchiffrement(text_chiffre, cle,taille_cle):
             text_chiffre = InvMixColumns(text_chiffre)
             # print("\nAprès InvMixColumns:", text_chiffre) #test 
         
-        print("\nTour: 1")
+        # print("\nTour: 1") #test 
         text_chiffre = InvShiftRows(text_chiffre)
         text_chiffre = InvSubBytes(text_chiffre)
         text_chiffre = AddRoundKey128(text_chiffre, round_keys[0:4])
