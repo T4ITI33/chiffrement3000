@@ -454,7 +454,7 @@ def InvMixColumns(matrix):
     return new_matrix
 
 #fonction de déchiffrement
-def déchiffrement(text_chiffre, cle,taille_cle):
+def dechiffrement(text_chiffre, cle,taille_cle):
     plain_text = []
 
     if taille_cle == 128:
@@ -517,74 +517,91 @@ def déchiffrement(text_chiffre, cle,taille_cle):
         text_chiffre = AddRoundKey128(text_chiffre, round_keys[0:4])
         plain_text.append(text_chiffre)
 
+    plain_text = matrice_to_hexa(plain_text)
+    plain_text = hex_to_text(plain_text)
     return plain_text
 
 
-def main():
-    choix = 1
-    while choix not in ['c', 'd']:
-        choix = input("Voulez-vous chiffrer ou déchiffrer ? (c/d) : ").strip().lower()
-        if choix not in ['c', 'd']:
-            print("Choix invalide. Veuillez entrer 'c' pour chiffrer ou 'd' pour déchiffrer.")
-        
-        if choix == 'c':
-            texte_a_chiffrer = input("Entrez le texte à chiffrer : ").strip()
-            texte_a_chiffrer = "test de chiffrement avec une clé"
-            if not texte_a_chiffrer:
-                print("Le texte ne peut pas être vide. Veuillez réessayer.")
-                continue
-            
-            cle_secrete = input("Entrez la clé secrète : ").strip()
-            cle_secrete = "cle128bittest"
-            if cle_secrete == "":
-                print("La clé ne peut pas être vide. Veuillez réessayer.")
-                continue
+import tkinter as tk
 
-            texte_chiffre = chiffrement(texte_a_chiffrer, cle_secrete, 128)
-            print("Texte d'origine:", texte_a_chiffrer)
-            print("Clé secrète:", cle_secrete)
-            print("\nTexte chiffré:", texte_chiffre)
+def text_to_hex(text):
+    return text.encode('utf-8').hex()
 
+def hex_to_text(hex_str):
+    try:
+        return bytes.fromhex(hex_str).decode('utf-8')
+    except Exception as e:
+        return f"Erreur : {e}"
 
+def chiffrement_aes():
+    texte = texte_input.get("1.0", tk.END).strip()
+    cle = cle_input.get().strip()
 
-        if choix == 'd':
-            texte_a_dechiffrer = input("Entrez le texte à déchiffrer (en hexadécimal) : ").strip()
-            # texte_a_chiffrer = "75a6e3decd98969eefcdd922cc3469755d2ee3f1b9a04158c5206201d339b4f9ad0fb517be9837ddf274e4da7c1b5b78"
-            if not texte_a_dechiffrer:
-                print("Le texte ne peut pas être vide. Veuillez réessayer.")
-                continue
+    if not texte or not cle:
+        resultat_chiffre.delete("1.0", tk.END)
+        resultat_chiffre.insert(tk.END, "Texte et clé requis.")
+        return
 
-            cle_secrete = input("Entrez la clé secrète : ").strip()
-            cle_secrete = "cle128bittest"
-            if cle_secrete == "":
-                print("La clé ne peut pas être vide. Veuillez réessayer.")
-                continue
-            
-            texte_dechiffre = déchiffrement(texte_a_dechiffrer, cle_secrete, 128)
-            print("\nTexte chiffré:", texte_a_dechiffrer)
-            print("Clé secrète:", cle_secrete)
-            print("\nTexte déchiffré:")
-            texte_dechiffre = matrice_to_hexa(texte_dechiffre)
-            print("Texte en hexadécimal:", texte_dechiffre)
-            texte_dechiffre = hexa_to_text(texte_dechiffre)
-            print(texte_dechiffre)
+    # 🔐 Remplacer par ton vrai chiffrement AES
+    texte_chiffre = chiffrement(texte, cle, 128)  # Utilise 128 bits pour l'exemple
 
-    # test = chiffrement(texte_a_chiffrer, cle_secrete, 128)
-    # print("Texte d'origine:", texte_a_chiffrer)
-    # print("Clé secrète:", cle_secrete)
-    # print("\nTexte chiffré:")
-    # test = matrice_to_hexa(test)
-    # print(test)
+    resultat_chiffre.delete("1.0", tk.END)
+    resultat_chiffre.insert(tk.END, texte_chiffre)
 
-    # test = "75a6e3decd98969eefcdd922cc3469755d2ee3f1b9a04158c5206201d339b4f9ad0fb517be9837ddf274e4da7c1b5b78"
-    # cle_secrete = "cle128bittest"
-    # # Déchiffrement
-    # texte_dechiffre = déchiffrement(test, cle_secrete, 128)
-    # texte_dechiffre = matrice_to_hexa(texte_dechiffre)
-    # texte_dechiffre = hexa_to_text(texte_dechiffre)
-    # print("\nTexte déchiffré:")
-    # print(texte_dechiffre)
+def dechiffrement_aes():
+    texte_hex = texte_chiffre_input.get("1.0", tk.END).strip()
+    cle = cle_dechif_input.get().strip()
 
+    if not texte_hex or not cle:
+        resultat_dechiffre.delete("1.0", tk.END)
+        resultat_dechiffre.insert(tk.END, "Texte et clé requis.")
+        return
 
-if __name__ == "__main__":
-    main()
+    # 🔓 Remplacer par ton vrai déchiffrement AES
+    texte = dechiffrement(texte_hex, cle, 128)  # Utilise 128 bits pour l'exemple
+
+    resultat_dechiffre.delete("1.0", tk.END)
+    resultat_dechiffre.insert(tk.END, texte)
+
+# ---- Interface ----
+window = tk.Tk()
+window.title("AES - Chiffrement / Déchiffrement")
+
+# Utilise un frame principal divisé en 2 colonnes
+frame_gauche = tk.Frame(window, padx=10, pady=10)
+frame_gauche.pack(side="left", fill="both", expand=True)
+
+frame_droite = tk.Frame(window, padx=10, pady=10)
+frame_droite.pack(side="right", fill="both", expand=True)
+
+# Partie chiffrement (gauche)
+tk.Label(frame_gauche, text="Texte à chiffrer :").pack()
+texte_input = tk.Text(frame_gauche, height=5, width=50)
+texte_input.pack()
+
+tk.Label(frame_gauche, text="Clé AES :").pack()
+cle_input = tk.Entry(frame_gauche, width=50)
+cle_input.pack()
+
+tk.Button(frame_gauche, text="Chiffrer", command=chiffrement_aes).pack(pady=5)
+
+tk.Label(frame_gauche, text="Résultat chiffré (hex) :").pack()
+resultat_chiffre = tk.Text(frame_gauche, height=5, width=50)
+resultat_chiffre.pack()
+
+# Partie déchiffrement (droite)
+tk.Label(frame_droite, text="Texte chiffré (hex) :").pack()
+texte_chiffre_input = tk.Text(frame_droite, height=5, width=50)
+texte_chiffre_input.pack()
+
+tk.Label(frame_droite, text="Clé AES :").pack()
+cle_dechif_input = tk.Entry(frame_droite, width=50)
+cle_dechif_input.pack()
+
+tk.Button(frame_droite, text="Déchiffrer", command=dechiffrement_aes).pack(pady=5)
+
+tk.Label(frame_droite, text="Résultat déchiffré :").pack()
+resultat_dechiffre = tk.Text(frame_droite, height=5, width=50)
+resultat_dechiffre.pack()
+
+window.mainloop()
