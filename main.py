@@ -1,6 +1,5 @@
 import hashlib
 import copy
-import test
 
 # S-box de l'AES
 Sbox = [
@@ -296,7 +295,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
         key_bytes = [cle_hash[i:i+2] for i in range(0, len(cle_hash), 2)]
-        print("taille de la clé: 128 bits")
+        print("taille de la clé: 128 bits") 
         nb_tour = 10
         round_keys = KeyExpansion(key_bytes, 128)
     elif taille_cle == 192:
@@ -369,7 +368,7 @@ def chiffrement(texte_en_clair, cle, taille_cle):
         # print("apres AddRoundKey", current_matrice) #test
         cyper_text.append(current_matrice)
 
-    return cyper_text
+    return matrice_to_hexa(cyper_text)
 
 
 
@@ -544,9 +543,8 @@ def main():
             texte_chiffre = chiffrement(texte_a_chiffrer, cle_secrete, 128)
             print("Texte d'origine:", texte_a_chiffrer)
             print("Clé secrète:", cle_secrete)
-            print("\nTexte chiffré:")
-            texte_chiffre = matrice_to_hexa(texte_chiffre)
-            print(texte_chiffre)
+            print("\nTexte chiffré:", texte_chiffre)
+
 
 
         if choix == 'd':

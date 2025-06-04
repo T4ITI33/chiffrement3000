@@ -1,59 +1,83 @@
 import tkinter as tk
-from tkinter import messagebox
 
-# Exemple de fonction de chiffrement (remplace avec ton vrai code AES)
-def aes_encrypt(plaintext):
-    # Remplace ceci avec ton chiffrement AES réel
-    return plaintext.encode('utf-8').hex()
+def text_to_hex(text):
+    return text.encode('utf-8').hex()
 
-def aes_decrypt(hexstring):
+def hex_to_text(hex_str):
     try:
-        return bytes.fromhex(hexstring).decode('utf-8')
+        return bytes.fromhex(hex_str).decode('utf-8')
     except Exception as e:
         return f"Erreur : {e}"
 
-# Fonction appelée lors du clic sur "Chiffrer"
-def chiffrer():
-    texte = input_entry.get()
-    if texte:
-        resultat = aes_encrypt(texte)
-        output_text.delete(1.0, tk.END)
-        output_text.insert(tk.END, resultat)
-    else:
-        messagebox.showwarning("Entrée manquante", "Veuillez entrer un texte à chiffrer.")
+def chiffrement_aes():
+    texte = texte_input.get("1.0", tk.END).strip()
+    cle = cle_input.get().strip()
 
-# Fonction appelée lors du clic sur "Déchiffrer"
-def dechiffrer():
-    hex_input = input_entry.get()
-    if hex_input:
-        resultat = aes_decrypt(hex_input)
-        output_text.delete(1.0, tk.END)
-        output_text.insert(tk.END, resultat)
-    else:
-        messagebox.showwarning("Entrée manquante", "Veuillez entrer un texte hexadécimal à déchiffrer.")
+    if not texte or not cle:
+        resultat_chiffre.delete("1.0", tk.END)
+        resultat_chiffre.insert(tk.END, "Texte et clé requis.")
+        return
 
-# Création de la fenêtre principale
+    # 🔐 Remplacer par ton vrai chiffrement AES
+    texte_chiffre = text_to_hex(texte)
+
+    resultat_chiffre.delete("1.0", tk.END)
+    resultat_chiffre.insert(tk.END, texte_chiffre)
+
+def dechiffrement_aes():
+    texte_hex = texte_chiffre_input.get("1.0", tk.END).strip()
+    cle = cle_dechif_input.get().strip()
+
+    if not texte_hex or not cle:
+        resultat_dechiffre.delete("1.0", tk.END)
+        resultat_dechiffre.insert(tk.END, "Texte et clé requis.")
+        return
+
+    # 🔓 Remplacer par ton vrai déchiffrement AES
+    texte = hex_to_text(texte_hex)
+
+    resultat_dechiffre.delete("1.0", tk.END)
+    resultat_dechiffre.insert(tk.END, texte)
+
+# ---- Interface ----
 window = tk.Tk()
-window.title("Démo Chiffrement AES")
-window.geometry("500x300")
+window.title("AES - Chiffrement / Déchiffrement")
 
-# Titre
-tk.Label(window, text="Entrée (texte ou hex)", font=("Arial", 12)).pack(pady=5)
+# Utilise un frame principal divisé en 2 colonnes
+frame_gauche = tk.Frame(window, padx=10, pady=10)
+frame_gauche.pack(side="left", fill="both", expand=True)
 
-# Zone d'entrée
-input_entry = tk.Entry(window, width=60)
-input_entry.pack(pady=5)
+frame_droite = tk.Frame(window, padx=10, pady=10)
+frame_droite.pack(side="right", fill="both", expand=True)
 
-# Boutons
-frame = tk.Frame(window)
-frame.pack(pady=5)
-tk.Button(frame, text="🔐 Chiffrer", command=chiffrer).pack(side=tk.LEFT, padx=10)
-tk.Button(frame, text="🔓 Déchiffrer", command=dechiffrer).pack(side=tk.LEFT, padx=10)
+# Partie chiffrement (gauche)
+tk.Label(frame_gauche, text="Texte à chiffrer :").pack()
+texte_input = tk.Text(frame_gauche, height=5, width=50)
+texte_input.pack()
 
-# Zone de sortie
-tk.Label(window, text="Résultat :", font=("Arial", 12)).pack(pady=5)
-output_text = tk.Text(window, height=6, width=60)
-output_text.pack()
+tk.Label(frame_gauche, text="Clé AES :").pack()
+cle_input = tk.Entry(frame_gauche, width=50)
+cle_input.pack()
 
-# Lancement de l'interface
+tk.Button(frame_gauche, text="Chiffrer", command=chiffrement_aes).pack(pady=5)
+
+tk.Label(frame_gauche, text="Résultat chiffré (hex) :").pack()
+resultat_chiffre = tk.Text(frame_gauche, height=5, width=50)
+resultat_chiffre.pack()
+
+# Partie déchiffrement (droite)
+tk.Label(frame_droite, text="Texte chiffré (hex) :").pack()
+texte_chiffre_input = tk.Text(frame_droite, height=5, width=50)
+texte_chiffre_input.pack()
+
+tk.Label(frame_droite, text="Clé AES :").pack()
+cle_dechif_input = tk.Entry(frame_droite, width=50)
+cle_dechif_input.pack()
+
+tk.Button(frame_droite, text="Déchiffrer", command=dechiffrement_aes).pack(pady=5)
+
+tk.Label(frame_droite, text="Résultat déchiffré :").pack()
+resultat_dechiffre = tk.Text(frame_droite, height=5, width=50)
+resultat_dechiffre.pack()
+
 window.mainloop()
