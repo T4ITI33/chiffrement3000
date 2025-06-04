@@ -194,9 +194,13 @@ Chaque case correspond à un caractère. Si il manque des caractère dans la der
 la fonction retourne une liste de matrices
 """
 def texte_en_matrice(phrase, taille_bloc=32):
-    # Complète avec des espaces si le texte n'est pas un multiple de la taille du bloc
+    # Complète avec '20' (espace en hexadécimal) si le texte n'est pas un multiple de la taille du bloc
     if len(phrase) % taille_bloc != 0:
-        phrase = phrase.ljust((len(phrase) // taille_bloc + 1) * taille_bloc)
+        # On complète avec '20' jusqu'à atteindre la taille du bloc
+        nb_missing = taille_bloc - (len(phrase) % taille_bloc)
+        phrase += '20' * (nb_missing // 2)
+        if nb_missing % 2 != 0:
+            phrase += '2'  # cas rare si taille_bloc est impair
 
     blocs = [phrase[i:i+taille_bloc] for i in range(0, len(phrase), taille_bloc)]
     liste_matrices = []
@@ -204,6 +208,9 @@ def texte_en_matrice(phrase, taille_bloc=32):
     for bloc in blocs:
         # Regroupe le texte en paires de caractères
         paires = [bloc[i:i+2] for i in range(0, len(bloc), 2)]
+        # Si la dernière matrice n'est pas complète, on la complète avec '20'
+        while len(paires) < 16:
+            paires.append('20')
         # Construit une matrice 4x4 colonne par colonne
         matrice = [[paires[i + j*4] for i in range(4)] for j in range(4)]
         liste_matrices.append(matrice)
@@ -234,10 +241,7 @@ def matrice_en_hexa(text):
 
 """ cette fonction appel matrice_en_hexa pour chaque matrice d'un texte """
 def texte_en_hexa(texte):
-    hexadecimal = []
-    for matrice in texte:
-        hexadecimal.append(matrice_en_hexa(matrice))
-    return hexadecimal
+    return texte.encode('latin-1').hex()
 
 
 
@@ -324,17 +328,18 @@ def chiffrement(texte_en_clair, cle, taille_cle):
     """pour le texte il faut d'abord le mettre en matrice avec texte_en_matrice() puis le transformer en hexa avec texte_en_hexa()"""
     print("\nTexte normal:\n",texte_en_clair)
 
-    texte_matrice = texte_en_matrice(texte_en_clair)
+    hexadecimal = texte_en_hexa(texte_en_clair)
+    print("Texte en hexadécimal:\n",hexadecimal)
+
+    texte_matrice = texte_en_matrice(hexadecimal, 32)
     print("\nTexte en matrice:")
     print_en_matrice(texte_matrice)
 
-    hexadecimal = texte_en_hexa(texte_matrice)
-    print("Texte en hexadécimal:\n")
-    print_en_matrice(hexadecimal)
+
 
     #hexadecimal correspond au texte en hexa en matrice
 
-    for current_matrice in hexadecimal:
+    for current_matrice in texte_matrice:
         # print("----------------------------------------") #test
         # print("current matrice") #test
         # print(current_matrice) #test
@@ -525,13 +530,13 @@ def main():
         
         if choix == 'c':
             texte_a_chiffrer = input("Entrez le texte à chiffrer : ").strip()
-            # texte_a_chiffrer = "test de chiffrement AES avec une clé de 128 bits"
+            texte_a_chiffrer = "test de chiffrement avec une clé"
             if not texte_a_chiffrer:
                 print("Le texte ne peut pas être vide. Veuillez réessayer.")
                 continue
             
             cle_secrete = input("Entrez la clé secrète : ").strip()
-            # cle_secrete = "cle128bittest"
+            cle_secrete = "cle128bittest"
             if cle_secrete == "":
                 print("La clé ne peut pas être vide. Veuillez réessayer.")
                 continue
@@ -552,7 +557,7 @@ def main():
                 continue
 
             cle_secrete = input("Entrez la clé secrète : ").strip()
-            # cle_secrete = "cle128bittest"
+            cle_secrete = "cle128bittest"
             if cle_secrete == "":
                 print("La clé ne peut pas être vide. Veuillez réessayer.")
                 continue
@@ -562,6 +567,7 @@ def main():
             print("Clé secrète:", cle_secrete)
             print("\nTexte déchiffré:")
             texte_dechiffre = matrice_to_hexa(texte_dechiffre)
+            print("Texte en hexadécimal:", texte_dechiffre)
             texte_dechiffre = hexa_to_text(texte_dechiffre)
             print(texte_dechiffre)
 
