@@ -457,6 +457,7 @@ def InvMixColumns(matrix):
 def dechiffrement(text_chiffre, cle,taille_cle):
     plain_text = []
 
+    taille_cle = 128
     if taille_cle == 128:
         cle_hash = hash_128bit(cle)
         # cle_hash = "00000000000000000000000000000000" #test
@@ -525,11 +526,11 @@ def dechiffrement(text_chiffre, cle,taille_cle):
 import tkinter as tk
 
 def text_to_hex(text):
-    return text.encode('utf-8').hex()
+    return text.encode('latin-1').hex()
 
 def hex_to_text(hex_str):
     try:
-        return bytes.fromhex(hex_str).decode('utf-8')
+        return bytes.fromhex(hex_str).decode('latin-1')
     except Exception as e:
         return f"Erreur : {e}"
 
